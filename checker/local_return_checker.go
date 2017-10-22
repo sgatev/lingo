@@ -5,9 +5,18 @@ import (
 	"go/ast"
 )
 
+func init() {
+	Register(&LocalReturnChecker{})
+}
+
 // LocalReturnChecker checks that exported funcs return exported
 // (and internal) types only.
 type LocalReturnChecker struct{}
+
+// Slug implements the NodeChecker interface.
+func (c *LocalReturnChecker) Slug() string {
+	return "local_return"
+}
 
 // Register implements the NodeChecker interface.
 func (c *LocalReturnChecker) Register(fc *FileChecker) {

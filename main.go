@@ -16,11 +16,23 @@ func main() {
 		file.NotMatcher(file.GlobMatcher("**/vendor/**/*")),
 		file.NotMatcher(file.GlobMatcher("**/*_test.go")))
 
-	c := checker.NewFileChecker()
-	c.Register(
-		&checker.MultiWordIdentNameChecker{},
-		&checker.ExportedIdentDocChecker{},
-		&checker.LocalReturnChecker{})
+	// TODO: parse slugs from config file
+	slugs := []string{
+		"local_return",
+		"multi_word_ident_name",
+		"exported_ident_doc",
+	}
+
+	fc := checker.NewFileChecker()
+	for _, slug := range slugs {
+		c := checker.Get(slug)
+		if c == nil {
+			// TODO: handle error gracefully
+			panic("unknown checker: " + slug)
+		}
+
+		fc.Register(c)
+	}
 
 	files, err := feeder.Feed(os.Args[1])
 	if err != nil {
@@ -38,7 +50,7 @@ func main() {
 			panic(err)
 		}
 
-		c.Check(file, &report)
+		fc.Check(file, &report)
 	}
 
 	for _, err := range report.Errors {

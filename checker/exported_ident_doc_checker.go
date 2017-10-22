@@ -5,9 +5,18 @@ import (
 	"go/ast"
 )
 
+func init() {
+	Register(&ExportedIdentDocChecker{})
+}
+
 // ExportedIdentDocChecker checks the documentation of exported
 // identifiers.
 type ExportedIdentDocChecker struct{}
+
+// Slug implements the NodeChecker interface.
+func (c *ExportedIdentDocChecker) Slug() string {
+	return "exported_ident_doc"
+}
 
 // Register implements the NodeChecker interface.
 func (c *ExportedIdentDocChecker) Register(fc *FileChecker) {

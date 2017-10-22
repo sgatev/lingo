@@ -6,11 +6,20 @@ import (
 	"regexp"
 )
 
+func init() {
+	Register(&MultiWordIdentNameChecker{})
+}
+
 // MultiWordIdentNameChecker checks the correctness of type names.
 // Correct type names adhere to the following rules:
 // * PascalCase for exported types.
 // * camelCase for non-exported types.
 type MultiWordIdentNameChecker struct{}
+
+// Slug implements the NodeChecker interface.
+func (c *MultiWordIdentNameChecker) Slug() string {
+	return "multi_word_ident_name"
+}
 
 // Register implements the NodeChecker interface.
 func (c *MultiWordIdentNameChecker) Register(fc *FileChecker) {
