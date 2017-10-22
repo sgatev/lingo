@@ -17,6 +17,13 @@ func NewFileChecker() *FileChecker {
 	}
 }
 
+// Register registers all `checkers`.
+func (c *FileChecker) Register(checkers ...NodeChecker) {
+	for _, checker := range checkers {
+		checker.Register(c)
+	}
+}
+
 // On registers `checker` for specific node type inferred from the type
 // of `nodeType`.
 func (c *FileChecker) On(nodeType interface{}, checker NodeChecker) {

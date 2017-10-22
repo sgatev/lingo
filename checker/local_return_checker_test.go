@@ -194,13 +194,12 @@ func TestLocalReturnChecker(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
-			fileChecker := NewFileChecker()
-			checker := &LocalReturnChecker{}
-			checker.Register(fileChecker)
+			checker := NewFileChecker()
+			checker.Register(&LocalReturnChecker{})
 
 			file := ParseFileContent(test.input)
 			var report Report
-			fileChecker.Check(file, &report)
+			checker.Check(file, &report)
 			assert.Equal(t, test.expected, report)
 		})
 	}
