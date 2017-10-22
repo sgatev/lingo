@@ -22,6 +22,10 @@ func (c *LocalReturnChecker) Check(node ast.Node, report *Report) {
 		return
 	}
 
+	if decl.Type.Results == nil {
+		return
+	}
+
 	for _, result := range decl.Type.Results.List {
 		c.checkExpr(decl.Name.Name, result.Type, report)
 	}

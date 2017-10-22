@@ -164,6 +164,32 @@ func TestLocalReturnChecker(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "local func, no return",
+			input: `
+				package test
+
+				func foo1() {}
+
+				func (f *Foo) foo2() {}
+			`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "exported func, no return",
+			input: `
+				package test
+
+				func Foo1() {}
+
+				func (f *Foo) Foo2() {}
+			`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
 	}
 
 	for _, test := range tests {
