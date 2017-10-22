@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	Register(&LocalReturnChecker{})
+	must(Register(&LocalReturnChecker{}))
 }
 
 // LocalReturnChecker checks that exported funcs return exported

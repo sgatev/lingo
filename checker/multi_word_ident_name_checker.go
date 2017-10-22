@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	Register(&MultiWordIdentNameChecker{})
+	must(Register(&MultiWordIdentNameChecker{}))
 }
 
 // MultiWordIdentNameChecker checks the correctness of type names.

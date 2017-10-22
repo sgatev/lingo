@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	Register(&ExportedIdentDocChecker{})
+	must(Register(&ExportedIdentDocChecker{}))
 }
 
 // ExportedIdentDocChecker checks the documentation of exported
