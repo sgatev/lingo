@@ -33,6 +33,14 @@ func (c *FileChecker) Check(file *ast.File, report *Report) {
 	}
 }
 
+func (c *FileChecker) emit(node ast.Node, report *Report) {
+	typeName := reflect.TypeOf(node).String()
+
+	for _, checker := range c.checkers[typeName] {
+		checker.Check(node, report)
+	}
+}
+
 func (c *FileChecker) visitDecl(decl ast.Decl, report *Report) {
 	switch decl := decl.(type) {
 	case *ast.GenDecl:
@@ -43,6 +51,8 @@ func (c *FileChecker) visitDecl(decl ast.Decl, report *Report) {
 }
 
 func (c *FileChecker) visitGenDecl(decl *ast.GenDecl, report *Report) {
+	c.emit(decl, report)
+
 	for _, spec := range decl.Specs {
 		switch spec := spec.(type) {
 		case *ast.TypeSpec:
@@ -54,6 +64,8 @@ func (c *FileChecker) visitGenDecl(decl *ast.GenDecl, report *Report) {
 }
 
 func (c *FileChecker) visitTypeSpec(spec *ast.TypeSpec, report *Report) {
+	c.emit(spec, report)
+
 	c.visitIdent(spec.Name, report)
 }
 
@@ -64,6 +76,8 @@ func (c *FileChecker) visitValueSpec(spec *ast.ValueSpec, report *Report) {
 }
 
 func (c *FileChecker) visitFuncDecl(decl *ast.FuncDecl, report *Report) {
+	c.emit(decl, report)
+
 	c.visitIdent(decl.Name, report)
 
 	for _, stmt := range decl.Body.List {
@@ -100,10 +114,7 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 }
 
 func (c *FileChecker) visitIdent(ident *ast.Ident, report *Report) {
-	typeName := reflect.TypeOf(ident).String()
-	for _, checker := range c.checkers[typeName] {
-		checker.Check(ident, report)
-	}
+	c.emit(ident, report)
 }
 
 func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {

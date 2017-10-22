@@ -1,0 +1,106 @@
+package checker_test
+
+import (
+	"fmt"
+	"testing"
+
+	. "github.com/s2gatev/lingo/checker"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestExportedIdentDocChecker(t *testing.T) {
+	type test struct {
+		description string
+		input       string
+		expected    Report
+	}
+
+	tests := []test{
+		{
+			description: "type",
+			input: `
+				package test
+
+				// FooBar1 is documented.
+				type FooBar1 struct{}
+
+				type fooBar2 struct{}
+
+				type FooBar3 struct{}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+				},
+			},
+		},
+		{
+			description: "const",
+			input: `
+				package test
+
+				// TheAnswer1 is documented.
+				const TheAnswer1 = 42
+
+				const theAnswer2 = 42
+
+				const TheAnswer3 = 42
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported identifier 'TheAnswer3' is not documented"),
+				},
+			},
+		},
+		{
+			description: "var",
+			input: `
+				package test
+
+				// TheAnswer1 is documented.
+				var TheAnswer1 = 42
+
+				var theAnswer2 = 42
+
+				var TheAnswer3 = 42
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported identifier 'TheAnswer3' is not documented"),
+				},
+			},
+		},
+		{
+			description: "var",
+			input: `
+				package test
+
+				// Foo1 is documented.
+				func Foo1() {}
+
+				func foo2() {}
+
+				func Foo3() {}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported identifier 'Foo3' is not documented"),
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.description, func(t *testing.T) {
+			fileChecker := NewFileChecker()
+			checker := &ExportedIdentDocChecker{}
+			checker.Register(fileChecker)
+
+			file := ParseFileContent(test.input)
+			var report Report
+			fileChecker.Check(file, &report)
+			assert.Equal(t, test.expected, report)
+		})
+	}
+}
