@@ -75,4 +75,5 @@ var internalTypes = map[string]struct{}{
 	"byte": struct{}{}, "string": struct{}{},
 	"float32": struct{}{}, "float64": struct{}{},
 	"complex64": struct{}{}, "complex128": struct{}{},
+	"bool": struct{}{}, "error": struct{}{},
 }
