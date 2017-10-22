@@ -131,7 +131,7 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "method",
+			description: "struct method",
 			input: `
 				package test
 
@@ -144,6 +144,38 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 			expected: Report{
 				Errors: []error{
 					fmt.Errorf("name 'foo_bar3' is not valid"),
+				},
+			},
+		},
+		{
+			description: "struct field",
+			input: `
+				package test
+
+				type Foo struct {
+					FooBar1		int
+					fooBar2		int
+					foo_bar3	int
+
+					FooBar4, fooBar5, foo_bar6 int
+				}
+
+				func foo() {
+					type Foo struct {
+						FooBar7		int
+						fooBar8		int
+						foo_bar9	int
+
+						FooBar10, fooBar11, foo_bar12 int
+					}
+				}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("name 'foo_bar3' is not valid"),
+					fmt.Errorf("name 'foo_bar6' is not valid"),
+					fmt.Errorf("name 'foo_bar9' is not valid"),
+					fmt.Errorf("name 'foo_bar12' is not valid"),
 				},
 			},
 		},

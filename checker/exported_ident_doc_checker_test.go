@@ -89,6 +89,33 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "struct field",
+			input: `
+				package test
+
+				// Foo is documented.
+				type Foo struct {
+
+					// FooBar1 is documented.
+					FooBar1	int
+					fooBar2	int
+					FooBar3	int
+
+					FooBar4, fooBar5, FooBar6 int
+
+					// Fields are documented.
+					FooBar7, fooBar8, FooBar9 int
+				}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+					fmt.Errorf("exported identifier 'FooBar4' is not documented"),
+					fmt.Errorf("exported identifier 'FooBar6' is not documented"),
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {

@@ -67,6 +67,7 @@ func (c *FileChecker) visitTypeSpec(spec *ast.TypeSpec, report *Report) {
 	c.emit(spec, report)
 
 	c.visitIdent(spec.Name, report)
+	c.visitExpr(spec.Type, report)
 }
 
 func (c *FileChecker) visitValueSpec(spec *ast.ValueSpec, report *Report) {
@@ -110,6 +111,8 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 		c.visitIdent(expr, report)
 	case *ast.FuncLit:
 		c.visitFuncLit(expr, report)
+	case *ast.StructType:
+		c.visitStructType(expr, report)
 	}
 }
 
@@ -125,5 +128,21 @@ func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {
 		case *ast.AssignStmt:
 			c.visitAssignStmt(stmt, report)
 		}
+	}
+}
+
+func (c *FileChecker) visitStructType(typ *ast.StructType, report *Report) {
+	c.emit(typ, report)
+
+	for _, field := range typ.Fields.List {
+		c.visitField(field, report)
+	}
+}
+
+func (c *FileChecker) visitField(field *ast.Field, report *Report) {
+	c.emit(field, report)
+
+	for _, name := range field.Names {
+		c.visitIdent(name, report)
 	}
 }
