@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"go/parser"
 	"go/token"
+	"io/ioutil"
 	"os"
+
+	yaml "gopkg.in/yaml.v2"
 
 	"github.com/s2gatev/lingo/checker"
 	"github.com/s2gatev/lingo/file"
@@ -12,7 +15,17 @@ import (
 )
 
 func init() {
+	Check.PersistentFlags().StringVar(&configFile, "config", "", "config file")
+
 	Root.AddCommand(Check)
+}
+
+// Config describes the lingo check config file structure.
+type Config struct {
+
+	// Checkers is a map[checker_slug]checker_config of checkers
+	// that need to be executed.
+	Checkers map[string]interface{} `yaml:"checkers"`
 }
 
 // Check is a command handler that checks the lingo in a directory
@@ -21,20 +34,25 @@ var Check = &cobra.Command{
 	Use:   "check",
 	Short: "Check the lingo of all files in a directory",
 	Run: func(cmd *cobra.Command, args []string) {
+		configData, err := ioutil.ReadFile(configFile)
+		if err != nil {
+			// TODO: handle error gracefully
+			panic(err)
+		}
+
+		var config Config
+		if err := yaml.Unmarshal(configData, &config); err != nil {
+			// TODO: handle error gracefully
+			panic(err)
+		}
+
 		feeder := file.NewFeeder(
 			file.GlobMatcher("**/*.go"),
 			file.NotMatcher(file.GlobMatcher("**/vendor/**/*")),
 			file.NotMatcher(file.GlobMatcher("**/*_test.go")))
 
-		// TODO: parse slugs from config file
-		slugs := []string{
-			"local_return",
-			"multi_word_ident_name",
-			"exported_ident_doc",
-		}
-
 		fc := checker.NewFileChecker()
-		for _, slug := range slugs {
+		for slug := range config.Checkers {
 			c := checker.Get(slug)
 			if c == nil {
 				// TODO: handle error gracefully
@@ -72,3 +90,5 @@ var Check = &cobra.Command{
 		}
 	},
 }
+
+var configFile string

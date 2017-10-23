@@ -49,9 +49,15 @@
   packages = ["go/ast/astutil","go/buildutil","go/loader"]
   revision = "9bd2f442688b66c5289262d70f537c2ecf81d7de"
 
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "18d6eb16376c834dfb80e088127605c64da9f2516efbbb2c873b907bd0f55338"
+  inputs-digest = "6fb4cb8c2a5b8191b94bedcbd654fb2cf72a2ad6f82dc55b34fadac53472a0a0"
   solver-name = "gps-cdcl"
   solver-version = 1
