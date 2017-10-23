@@ -1,8 +1,10 @@
 package file
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Matcher matches a file based on a path criteria.
@@ -40,18 +42,52 @@ func (f *Feeder) Feed(root string) (<-chan string, error) {
 	go func() {
 		defer close(files)
 
-		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-			for _, matcher := range f.matchers {
-				if !matcher.Matches(path) {
-					return nil
-				}
-			}
-
-			files <- path
-
-			return nil
-		})
+		if strings.HasSuffix(dir, recPathSuffix) {
+			f.feedDirRecursive(strings.TrimSuffix(dir, recPathSuffix), files)
+		} else {
+			f.feedDir(dir, files)
+		}
 	}()
 
 	return files, nil
+}
+
+const recPathSuffix = "/..."
+
+func (f *Feeder) feedDir(dir string, paths chan<- string) {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+
+		path := filepath.Join(dir, file.Name())
+		if f.matches(path) {
+			paths <- path
+		}
+	}
+}
+
+func (f *Feeder) feedDirRecursive(dir string, paths chan<- string) {
+	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if f.matches(path) {
+			paths <- path
+		}
+
+		return nil
+	})
+}
+
+func (f *Feeder) matches(path string) bool {
+	for _, matcher := range f.matchers {
+		if !matcher.Matches(path) {
+			return false
+		}
+	}
+
+	return true
 }
