@@ -2,12 +2,31 @@
 
 Lingo helps you define and enforce project-specific Go lingo.
 
+## Description
+
+Lingo is a tool for fully-automated static code analysis of Go code. It is designed
+to be integrated in continuous delivery pipelines and act as a single source of truth
+for a project's code style.
+
 ## Installation
 
 To install the latest version of lingo, execute:
 
 ```sh
 go get -u github.com/s2gatev/lingo
+```
+
+## Configuration
+
+The static analysis checks performed by lingo are defined in a configuration file
+that needs to be provided upon execution. The following example defines three
+static analysis checks:
+
+```yaml
+checkers:
+  local_return:
+  multi_word_ident_name:
+  exported_ident_doc:
 ```
 
 ## Checking
@@ -29,6 +48,12 @@ lingo check ./... --config lingo.yml
 7. Commit your changes (`git commit -m 'Add some feature'`)
 8. Push the branch (`git push origin new-feature`)
 9. Create a new pull request
+
+## Credits
+
+Lingo draws huge inspiration from [RuboCop](https://github.com/bbatsov/rubocop) and
+other Go tools such as [dep](https://github.com/golang/dep), [cobra](https://github.com/spf13/cobra)
+and [golint](https://github.com/golang/lint).
 
 ## Copyright
 
