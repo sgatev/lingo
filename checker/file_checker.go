@@ -120,6 +120,10 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 		c.visitFuncLit(expr, report)
 	case *ast.StructType:
 		c.visitStructType(expr, report)
+	case *ast.InterfaceType:
+		c.visitInterfaceType(expr, report)
+	case *ast.FuncType:
+		c.visitFuncType(expr, report)
 	}
 }
 
@@ -146,10 +150,24 @@ func (c *FileChecker) visitStructType(typ *ast.StructType, report *Report) {
 	}
 }
 
+func (c *FileChecker) visitInterfaceType(typ *ast.InterfaceType, report *Report) {
+	c.emit(typ, report)
+
+	for _, method := range typ.Methods.List {
+		c.visitField(method, report)
+	}
+}
+
+func (c *FileChecker) visitFuncType(typ *ast.FuncType, report *Report) {
+	c.emit(typ, report)
+}
+
 func (c *FileChecker) visitField(field *ast.Field, report *Report) {
 	c.emit(field, report)
 
 	for _, name := range field.Names {
 		c.visitIdent(name, report)
 	}
+
+	c.visitExpr(field.Type, report)
 }

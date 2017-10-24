@@ -179,6 +179,23 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "interface method",
+			input: `
+				package test
+
+				type Foo interface {
+					FooBar1()	int
+					fooBar2()	int
+					foo_bar3()	int
+				}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("name 'foo_bar3' is not valid"),
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {

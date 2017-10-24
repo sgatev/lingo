@@ -21,12 +21,20 @@ func (c *LocalReturnChecker) Slug() string {
 // Register implements the NodeChecker interface.
 func (c *LocalReturnChecker) Register(fc *FileChecker) {
 	fc.On(&ast.FuncDecl{}, c)
+	fc.On(&ast.Field{}, c)
 }
 
 // Check implements the NodeChecker interface.
 func (c *LocalReturnChecker) Check(node ast.Node, report *Report) {
-	decl := node.(*ast.FuncDecl)
+	switch node := node.(type) {
+	case *ast.FuncDecl:
+		c.checkFuncDecl(node, report)
+	case *ast.Field:
+		c.checkField(node, report)
+	}
+}
 
+func (c *LocalReturnChecker) checkFuncDecl(decl *ast.FuncDecl, report *Report) {
 	if !decl.Name.IsExported() {
 		return
 	}
@@ -37,6 +45,27 @@ func (c *LocalReturnChecker) Check(node ast.Node, report *Report) {
 
 	for _, result := range decl.Type.Results.List {
 		c.checkExpr(decl.Name.Name, result.Type, report)
+	}
+}
+
+func (c *LocalReturnChecker) checkField(field *ast.Field, report *Report) {
+	typ, ok := field.Type.(*ast.FuncType)
+	if !ok {
+		return
+	}
+
+	if typ.Results == nil {
+		return
+	}
+
+	for _, name := range field.Names {
+		if !name.IsExported() {
+			continue
+		}
+
+		for _, result := range typ.Results.List {
+			c.checkExpr(name.Name, result.Type, report)
+		}
 	}
 }
 

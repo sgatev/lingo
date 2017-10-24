@@ -190,6 +190,21 @@ func TestLocalReturnChecker(t *testing.T) {
 				Errors: nil,
 			},
 		},
+		{
+			description: "interface method, local return",
+			input: `
+				package test
+
+				type FooBar interface {
+					Foo() bar
+				}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported func 'Foo' cannot return value of local type 'bar'"),
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {

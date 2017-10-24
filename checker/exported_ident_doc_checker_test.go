@@ -116,6 +116,26 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "interface method",
+			input: `
+				package test
+
+				// Foo is documented.
+				type Foo interface {
+
+					// FooBar1 is documented.
+					FooBar1()	int
+					fooBar2()	int
+					FooBar3()	int
+				}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {
