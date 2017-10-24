@@ -1,0 +1,6 @@
+language: go
+
+script:
+  - go test -v ./... -race
+  - go install
+  - lingo check ./... --config lingo.yml
