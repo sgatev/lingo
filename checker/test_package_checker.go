@@ -7,12 +7,17 @@ import (
 )
 
 func init() {
-	must(Register(&TestPackageChecker{}))
+	must(Register(NewTestPackageChecker))
 }
 
 // TestPackageChecker checks that tests are placed in "*_test" packages
 // only.
 type TestPackageChecker struct{}
+
+// NewTestPackageChecker constructs a TestPackageChecker.
+func NewTestPackageChecker() NodeChecker {
+	return &TestPackageChecker{}
+}
 
 // Slug implements the NodeChecker interface.
 func (c *TestPackageChecker) Slug() string {

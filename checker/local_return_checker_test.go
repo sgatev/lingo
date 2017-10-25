@@ -210,7 +210,7 @@ func TestLocalReturnChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
 			checker := NewFileChecker()
-			checker.Register(&LocalReturnChecker{})
+			checker.Register(NewLocalReturnChecker())
 
 			file := ParseFileContent(test.input)
 			var report Report

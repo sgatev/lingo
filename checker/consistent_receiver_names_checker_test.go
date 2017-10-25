@@ -36,7 +36,7 @@ func TestConsistentReceiverNamesChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
 			checker := NewFileChecker()
-			checker.Register(&ConsistentReceiverNamesChecker{})
+			checker.Register(NewConsistentReceiverNamesChecker())
 
 			file := ParseFileContent(test.input)
 			var report Report

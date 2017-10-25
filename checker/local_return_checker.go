@@ -6,12 +6,17 @@ import (
 )
 
 func init() {
-	must(Register(&LocalReturnChecker{}))
+	must(Register(NewLocalReturnChecker))
 }
 
 // LocalReturnChecker checks that exported funcs return exported
 // (and internal) types only.
 type LocalReturnChecker struct{}
+
+// NewLocalReturnChecker constructs a LocalReturnChecker.
+func NewLocalReturnChecker() NodeChecker {
+	return &LocalReturnChecker{}
+}
 
 // Slug implements the NodeChecker interface.
 func (c *LocalReturnChecker) Slug() string {

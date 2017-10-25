@@ -11,14 +11,18 @@ import (
 
 func TestRegistry(t *testing.T) {
 	checker := &dummyChecker{}
-	err := Register(checker)
+	err := Register(func() NodeChecker {
+		return checker
+	})
 	assert.Nil(t, err)
 	assert.Equal(t, checker, Get(checker.Slug()))
 }
 
 func TestRegistryAlreadyPresent(t *testing.T) {
 	checker := &dummyChecker{}
-	err := Register(checker)
+	err := Register(func() NodeChecker {
+		return checker
+	})
 	assert.Equal(t, fmt.Errorf("checker already registered: dummy"), err)
 	assert.Equal(t, checker, Get(checker.Slug()))
 }

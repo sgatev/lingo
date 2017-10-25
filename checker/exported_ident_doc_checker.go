@@ -6,12 +6,17 @@ import (
 )
 
 func init() {
-	must(Register(&ExportedIdentDocChecker{}))
+	must(Register(NewExportedIdentDocChecker))
 }
 
 // ExportedIdentDocChecker checks the documentation of exported
 // identifiers.
 type ExportedIdentDocChecker struct{}
+
+// NewExportedIdentDocChecker constructs a ExportedIdentDocChecker.
+func NewExportedIdentDocChecker() NodeChecker {
+	return &ExportedIdentDocChecker{}
+}
 
 // Slug implements the NodeChecker interface.
 func (c *ExportedIdentDocChecker) Slug() string {

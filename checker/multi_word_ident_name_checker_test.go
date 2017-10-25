@@ -201,7 +201,7 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
 			checker := NewFileChecker()
-			checker.Register(&MultiWordIdentNameChecker{})
+			checker.Register(NewMultiWordIdentNameChecker())
 
 			file := ParseFileContent(test.input)
 			var report Report

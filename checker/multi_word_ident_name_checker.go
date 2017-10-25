@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	must(Register(&MultiWordIdentNameChecker{}))
+	must(Register(NewMultiWordIdentNameChecker))
 }
 
 // MultiWordIdentNameChecker checks the correctness of type names.
@@ -15,6 +15,11 @@ func init() {
 // * PascalCase for exported types.
 // * camelCase for non-exported types.
 type MultiWordIdentNameChecker struct{}
+
+// NewMultiWordIdentNameChecker constructs a MultiWordIdentNameChecker.
+func NewMultiWordIdentNameChecker() NodeChecker {
+	return &MultiWordIdentNameChecker{}
+}
 
 // Slug implements the NodeChecker interface.
 func (c *MultiWordIdentNameChecker) Slug() string {
