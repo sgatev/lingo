@@ -35,6 +35,8 @@ func (c *FileChecker) On(nodeType interface{}, checker NodeChecker) {
 
 // Check checks `file` for violations and registers them in `report`.
 func (c *FileChecker) Check(file *ast.File, report *Report) {
+	c.emit(file, report)
+
 	for _, decl := range file.Decls {
 		c.visitDecl(decl, report)
 	}

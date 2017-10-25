@@ -2,3 +2,4 @@ checkers:
   local_return:
   multi_word_ident_name:
   exported_ident_doc:
+  test_package:
