@@ -22,3 +22,4 @@ checkers:
   exported_ident_doc:
   test_package:
   consistent_receiver_names:
+  return_error_last:
