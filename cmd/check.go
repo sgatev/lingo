@@ -77,24 +77,39 @@ var Check = &cobra.Command{
 			panic(err)
 		}
 
-		var report checker.Report
+		reports := map[string]*checker.Report{}
 
 		fset := token.NewFileSet()
 		for path := range files {
+			reports[path] = &checker.Report{}
+
 			file, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
 			if err != nil {
 				// TODO: handle error gracefully
 				panic(err)
 			}
 
-			fc.Check(file, &report)
+			fc.Check(file, reports[path])
 		}
 
-		for _, err := range report.Errors {
-			fmt.Println(err.Error())
-		}
+		totalErrors := 0
+		for path, report := range reports {
+			if len(report.Errors) == 0 {
+				continue
+			}
 
-		if len(report.Errors) > 0 {
+			fmt.Println(path)
+			for _, err := range report.Errors {
+				fmt.Printf("\t- %s\n", err.Error())
+			}
+			fmt.Println()
+
+			totalErrors += len(report.Errors)
+		}
+		fmt.Printf("%d violations found in %d files\n",
+			totalErrors, len(reports))
+
+		if totalErrors > 0 {
 			os.Exit(1)
 		}
 	},
