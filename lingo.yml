@@ -1,3 +1,21 @@
+matchers:
+  -
+    type: 'glob'
+    config:
+      pattern: '**/*.go'
+  -
+    type: 'not'
+    config:
+      type: 'glob'
+      config:
+        pattern: '**/vendor/**/*'
+  -
+    type: 'not'
+    config:
+      type: 'glob'
+      config:
+        pattern: '**/*_test.go'
+
 checkers:
   local_return:
   multi_word_ident_name:

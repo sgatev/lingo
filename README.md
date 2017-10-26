@@ -21,14 +21,35 @@ go get -u github.com/s2gatev/lingo
 ## Configuration
 
 The static analysis checks performed by lingo are defined in a configuration file
-that needs to be provided upon execution. The following example defines three
-static analysis checks:
+that needs to be provided upon execution. The following example defines five
+static analysis checks that are executed against all `.go` files except those
+under `vendor/` and those with names ending in `_test`:
 
 ```yaml
+matchers:
+  -
+    type: 'glob'
+    config:
+      pattern: '**/*.go'
+  -
+    type: 'not'
+    config:
+      type: 'glob'
+      config:
+        pattern: '**/vendor/**/*'
+  -
+    type: 'not'
+    config:
+      type: 'glob'
+      config:
+        pattern: '**/*_test.go'
+
 checkers:
   local_return:
   multi_word_ident_name:
   exported_ident_doc:
+  test_package:
+  consistent_receiver_names:
 ```
 
 ## Checking

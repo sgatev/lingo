@@ -22,6 +22,12 @@ func init() {
 
 // Config describes the lingo check config file structure.
 type Config struct {
+	// Matchers is a list of file matchers used to define
+	// the files that will be checked.
+	Matchers []struct {
+		Type   string                 `yaml:"type"`
+		Config map[string]interface{} `yaml:"config"`
+	} `yaml:"matchers"`
 
 	// Checkers is a map[checker_slug]checker_config of checkers
 	// that need to be executed.
@@ -46,10 +52,13 @@ var Check = &cobra.Command{
 			panic(err)
 		}
 
-		feeder := file.NewFeeder(
-			file.GlobMatcher("**/*.go"),
-			file.NotMatcher(file.GlobMatcher("**/vendor/**/*")),
-			file.NotMatcher(file.GlobMatcher("**/*_test.go")))
+		var matchers []file.Matcher
+		for _, matcher := range config.Matchers {
+			matchers = append(matchers,
+				file.Get(matcher.Type, matcher.Config))
+		}
+
+		feeder := file.NewFeeder(matchers...)
 
 		fc := checker.NewFileChecker()
 		for slug := range config.Checkers {

@@ -1,16 +1,38 @@
 package file
 
-import zglob "github.com/mattn/go-zglob"
+import (
+	"fmt"
+
+	zglob "github.com/mattn/go-zglob"
+	"github.com/uber-go/mapdecode"
+)
+
+func init() {
+	must(Register("glob", GlobMatcher))
+}
+
+// GlobMatcherConfig describes the configuration of a GlobMatcher.
+type GlobMatcherConfig struct {
+
+	// Pattern is the glob pattern used by the matcher.
+	Pattern string `yaml:"pattern"`
+}
 
 type globMatcher struct {
 	pattern string
 }
 
 // GlobMatcher creates a new Matcher that accepts files based on
-// glob `pattern`.
-func GlobMatcher(pattern string) Matcher {
+// glob pattern.
+func GlobMatcher(configData interface{}) Matcher {
+	var config GlobMatcherConfig
+	if err := mapdecode.Decode(&config, configData); err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
 	return &globMatcher{
-		pattern: pattern,
+		pattern: config.Pattern,
 	}
 }
 
