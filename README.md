@@ -1,6 +1,7 @@
 # lingo
 
 [![Build Status](https://travis-ci.org/s2gatev/lingo.svg?branch=master)](https://travis-ci.org/s2gatev/lingo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/s2gatev/lingo)](https://goreportcard.com/report/github.com/s2gatev/lingo)
 
 Lingo helps you define and enforce project-specific Go lingo.
 
