@@ -22,6 +22,20 @@ func TestConsistentReceiverNamesChecker(t *testing.T) {
 			input: `
 				package foo
 
+				func (f Foo) Foo() {}
+				func (b Foo) Bar() {}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("receivers in methods for type 'Foo' should have the same names"),
+				},
+			},
+		},
+		{
+			description: "inconsistent pointer receiver names",
+			input: `
+				package foo
+
 				func (f *Foo) Foo() {}
 				func (b *Foo) Bar() {}
 			`,
@@ -29,6 +43,30 @@ func TestConsistentReceiverNamesChecker(t *testing.T) {
 				Errors: []error{
 					fmt.Errorf("receivers in methods for type 'Foo' should have the same names"),
 				},
+			},
+		},
+		{
+			description: "no receivers",
+			input: `
+				package foo
+
+				func Foo() {}
+				func Bar() {}
+			`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "unnamed receiver",
+			input: `
+				package foo
+
+				func (f *Foo) Foo() {}
+				func (*Foo) Bar() {}
+			`,
+			expected: Report{
+				Errors: nil,
 			},
 		},
 	}

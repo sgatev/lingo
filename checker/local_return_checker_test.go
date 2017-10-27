@@ -205,6 +205,45 @@ func TestLocalReturnChecker(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "interface local method, local return",
+			input: `
+				package test
+
+				type FooBar interface {
+					foo() bar
+				}
+			`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "interface method, no return",
+			input: `
+				package test
+
+				type FooBar interface {
+					Foo()
+				}
+			`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "struct field",
+			input: `
+				package test
+
+				type Foo struct {
+					Bar string
+				}
+			`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
 	}
 
 	for _, test := range tests {

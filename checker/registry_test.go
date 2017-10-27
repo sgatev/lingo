@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRegistry(t *testing.T) {
+func TestRegistryRegister(t *testing.T) {
 	checker := &dummyChecker{}
 	err := Register(func() NodeChecker {
 		return checker
@@ -18,13 +18,17 @@ func TestRegistry(t *testing.T) {
 	assert.Equal(t, checker, Get(checker.Slug()))
 }
 
-func TestRegistryAlreadyPresent(t *testing.T) {
+func TestRegistryRegisterAlreadyPresent(t *testing.T) {
 	checker := &dummyChecker{}
 	err := Register(func() NodeChecker {
 		return checker
 	})
 	assert.Equal(t, fmt.Errorf("checker already registered: dummy"), err)
 	assert.Equal(t, checker, Get(checker.Slug()))
+}
+
+func TestRegistryGetNotPresent(t *testing.T) {
+	assert.Nil(t, Get("unknown"))
 }
 
 type dummyChecker struct{}

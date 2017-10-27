@@ -57,7 +57,7 @@ func TestReturnErrorLastChecker(t *testing.T) {
 			input: `
 				package foo
 
-				func Foo() struct{} {}
+				func Foo() (struct{},error) {}
 			`,
 			expected: Report{
 				Errors: nil,
