@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -17,7 +16,7 @@ func TestExportedIdentDocChecker(t *testing.T) {
 	}
 
 	tests := []test{
-		{
+		/*{
 			description: "type",
 			input: `
 				package test
@@ -134,6 +133,24 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				Errors: []error{
 					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
 				},
+			},
+		},*/
+		{
+			description: "grouped identifiers",
+			input: `
+				package test
+
+				var (
+
+					// Foo is documented.
+					Foo int
+
+					// Bar is documented.
+					Bar string
+				)
+			`,
+			expected: Report{
+				Errors: nil,
 			},
 		},
 	}

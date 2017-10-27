@@ -76,7 +76,7 @@ func (c *ExportedIdentDocChecker) checkValueSpec(
 			continue
 		}
 
-		if doc == nil {
+		if doc == nil && spec.Doc == nil {
 			report.Errors = append(report.Errors,
 				fmt.Errorf("exported identifier '%s' is not documented",
 					name.Name))
