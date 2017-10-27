@@ -110,13 +110,13 @@ func (c *LocalReturnChecker) checkIdent(
 const localReturnErrMsg = "exported func '%s' cannot return value of local type '%s'"
 
 var internalTypes = map[string]struct{}{
-	"int": struct{}{}, "int8": struct{}{},
-	"int16": struct{}{}, "int32": struct{}{},
-	"int64": struct{}{}, "uint": struct{}{},
-	"uint8": struct{}{}, "uint16": struct{}{},
-	"uint32": struct{}{}, "uint64": struct{}{},
-	"byte": struct{}{}, "string": struct{}{},
-	"float32": struct{}{}, "float64": struct{}{},
-	"complex64": struct{}{}, "complex128": struct{}{},
-	"bool": struct{}{}, "error": struct{}{},
+	"int": {}, "int8": {},
+	"int16": {}, "int32": {},
+	"int64": {}, "uint": {},
+	"uint8": {}, "uint16": {},
+	"uint32": {}, "uint64": {},
+	"byte": {}, "string": {},
+	"float32": {}, "float64": {},
+	"complex64": {}, "complex128": {},
+	"bool": {}, "error": {},
 }
