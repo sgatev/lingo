@@ -3,12 +3,10 @@ package checker
 import "fmt"
 
 // NodeCheckerConstructor constructs NodeChecker instances.
-type NodeCheckerConstructor func() NodeChecker
+type NodeCheckerConstructor func(configData interface{}) NodeChecker
 
 // Register adds `checker` to the registry.
-func Register(constructor NodeCheckerConstructor) error {
-	slug := constructor().Slug()
-
+func Register(slug string, constructor NodeCheckerConstructor) error {
 	if _, ok := registry[slug]; ok {
 		return fmt.Errorf("checker already registered: " + slug)
 	}
@@ -19,13 +17,13 @@ func Register(constructor NodeCheckerConstructor) error {
 }
 
 // Get returns the NodeChecker referenced by a `slug`.
-func Get(slug string) NodeChecker {
+func Get(slug string, config interface{}) NodeChecker {
 	constructor, ok := registry[slug]
 	if !ok {
 		return nil
 	}
 
-	return constructor()
+	return constructor(config)
 }
 
 var registry = map[string]NodeCheckerConstructor{}

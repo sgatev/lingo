@@ -1,10 +1,6 @@
 package file
 
-import (
-	"fmt"
-
-	"github.com/uber-go/mapdecode"
-)
+import "github.com/uber-go/mapdecode"
 
 func init() {
 	must(Register("not", NotMatcher))
@@ -29,7 +25,6 @@ type notMatcher struct {
 func NotMatcher(configData interface{}) Matcher {
 	var config NotMatcherConfig
 	if err := mapdecode.Decode(&config, configData); err != nil {
-		fmt.Println(err)
 		return nil
 	}
 

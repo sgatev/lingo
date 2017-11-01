@@ -31,7 +31,7 @@ type Config struct {
 
 	// Checkers is a map[checker_slug]checker_config of checkers
 	// that need to be executed.
-	Checkers map[string]interface{} `yaml:"checkers"`
+	Checkers map[string]map[string]interface{} `yaml:"checkers"`
 }
 
 // Check is a command handler that checks the lingo in a directory
@@ -61,8 +61,8 @@ var Check = &cobra.Command{
 		feeder := file.NewFeeder(matchers...)
 
 		fc := checker.NewFileChecker()
-		for slug := range config.Checkers {
-			c := checker.Get(slug)
+		for slug, config := range config.Checkers {
+			c := checker.Get(slug, config)
 			if c == nil {
 				// TODO: handle error gracefully
 				panic("unknown checker: " + slug)

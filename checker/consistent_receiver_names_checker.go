@@ -6,7 +6,9 @@ import (
 )
 
 func init() {
-	must(Register(NewConsistentReceiverNamesChecker))
+	must(Register(
+		"consistent_receiver_names",
+		NewConsistentReceiverNamesChecker))
 }
 
 // ConsistentReceiverNamesChecker checks that method receivers of a type
@@ -17,15 +19,10 @@ type ConsistentReceiverNamesChecker struct {
 
 // NewConsistentReceiverNamesChecker constructs a
 // ConsistentReceiverNamesChecker.
-func NewConsistentReceiverNamesChecker() NodeChecker {
+func NewConsistentReceiverNamesChecker(configData interface{}) NodeChecker {
 	return &ConsistentReceiverNamesChecker{
 		receiverNames: map[string]string{},
 	}
-}
-
-// Slug implements the NodeChecker interface.
-func (c *ConsistentReceiverNamesChecker) Slug() string {
-	return "consistent_receiver_names"
 }
 
 // Register implements the NodeChecker interface.

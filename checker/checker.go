@@ -15,9 +15,6 @@ type Report struct {
 // NodeChecker checks ast.Node values for violations.
 type NodeChecker interface {
 
-	// Slug is the unique identifier of the checker.
-	Slug() string
-
 	// Register registers the node checker for specific types
 	// of nodes in `fc`.
 	Register(fc *FileChecker)

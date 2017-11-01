@@ -4,29 +4,41 @@ import (
 	"fmt"
 	"go/ast"
 	"strings"
+
+	"github.com/uber-go/mapdecode"
 )
 
 func init() {
-	must(Register(NewLineLengthChecker))
+	must(Register("line_length", NewLineLengthChecker))
+}
+
+// LineLengthConfig describes the configuration of a LineLengthChecker.
+type LineLengthConfig struct {
+
+	// MaxLength is the maximum number of characters permitted on a single line.
+	MaxLength int `mapdecode:"max_length"`
+
+	// TabWidth is the number of characters equivilent to a single tab.
+	TabWidth int `mapdecode:"tab_width"`
 }
 
 // LineLengthChecker checks that code lines are withing specific length limits.
 type LineLengthChecker struct {
-	maxLineLength int
-	tabWidth      int
+	maxLength int
+	tabWidth  int
 }
 
 // NewLineLengthChecker constructs a LineLengthChecker.
-func NewLineLengthChecker() NodeChecker {
-	return &LineLengthChecker{
-		maxLineLength: 80,
-		tabWidth:      4,
+func NewLineLengthChecker(configData interface{}) NodeChecker {
+	var config LineLengthConfig
+	if err := mapdecode.Decode(&config, configData); err != nil {
+		return nil
 	}
-}
 
-// Slug implements the NodeChecker interface.
-func (c *LineLengthChecker) Slug() string {
-	return "line_length"
+	return &LineLengthChecker{
+		maxLength: config.MaxLength,
+		tabWidth:  config.TabWidth,
+	}
 }
 
 // Register implements the NodeChecker interface.
@@ -46,7 +58,7 @@ func (c *LineLengthChecker) Check(
 	for idx, line := range lines {
 		line = strings.Replace(line, "\t", tabAsSpaces, -1)
 
-		if len(line) > c.maxLineLength {
+		if len(line) > c.maxLength {
 			report.Errors = append(report.Errors,
 				fmt.Errorf("line %d is too long", idx+1))
 		}

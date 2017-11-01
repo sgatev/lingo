@@ -1,8 +1,6 @@
 package file
 
 import (
-	"fmt"
-
 	zglob "github.com/mattn/go-zglob"
 	"github.com/uber-go/mapdecode"
 )
@@ -27,7 +25,6 @@ type globMatcher struct {
 func GlobMatcher(configData interface{}) Matcher {
 	var config GlobMatcherConfig
 	if err := mapdecode.Decode(&config, configData); err != nil {
-		fmt.Println(err)
 		return nil
 	}
 

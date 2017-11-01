@@ -68,7 +68,7 @@ func TestReturnErrorLastChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
 			checker := NewFileChecker()
-			checker.Register(NewReturnErrorLastChecker())
+			checker.Register(NewReturnErrorLastChecker(nil))
 
 			file := ParseFileContent(test.input)
 			var report Report

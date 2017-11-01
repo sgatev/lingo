@@ -24,3 +24,5 @@ checkers:
   consistent_receiver_names:
   return_error_last:
   line_length:
+    max_length: 90
+    tab_width: 4

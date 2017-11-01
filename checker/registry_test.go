@@ -11,31 +11,27 @@ import (
 
 func TestRegistryRegister(t *testing.T) {
 	checker := &dummyChecker{}
-	err := Register(func() NodeChecker {
+	err := Register("dummy", func(configData interface{}) NodeChecker {
 		return checker
 	})
 	assert.Nil(t, err)
-	assert.Equal(t, checker, Get(checker.Slug()))
+	assert.Equal(t, checker, Get("dummy", nil))
 }
 
 func TestRegistryRegisterAlreadyPresent(t *testing.T) {
 	checker := &dummyChecker{}
-	err := Register(func() NodeChecker {
+	err := Register("dummy", func(configData interface{}) NodeChecker {
 		return checker
 	})
 	assert.Equal(t, fmt.Errorf("checker already registered: dummy"), err)
-	assert.Equal(t, checker, Get(checker.Slug()))
+	assert.Equal(t, checker, Get("dummy", nil))
 }
 
 func TestRegistryGetNotPresent(t *testing.T) {
-	assert.Nil(t, Get("unknown"))
+	assert.Nil(t, Get("unknown", nil))
 }
 
 type dummyChecker struct{}
-
-func (c *dummyChecker) Slug() string {
-	return "dummy"
-}
 
 func (c *dummyChecker) Register(fc *FileChecker) {}
 

@@ -159,7 +159,7 @@ func TestExportedIdentDocChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
 			checker := NewFileChecker()
-			checker.Register(NewExportedIdentDocChecker())
+			checker.Register(NewExportedIdentDocChecker(nil))
 
 			file := ParseFileContent(test.input)
 			var report Report

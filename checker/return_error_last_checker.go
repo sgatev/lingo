@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	must(Register(NewReturnErrorLastChecker))
+	must(Register("return_error_last", NewReturnErrorLastChecker))
 }
 
 // ReturnErrorLastChecker checks that error is the last value returned
@@ -14,13 +14,8 @@ func init() {
 type ReturnErrorLastChecker struct{}
 
 // NewReturnErrorLastChecker constructs a ReturnErrorLastChecker.
-func NewReturnErrorLastChecker() NodeChecker {
+func NewReturnErrorLastChecker(configData interface{}) NodeChecker {
 	return &ReturnErrorLastChecker{}
-}
-
-// Slug implements the NodeChecker interface.
-func (c *ReturnErrorLastChecker) Slug() string {
-	return "return_error_last"
 }
 
 // Register implements the NodeChecker interface.
