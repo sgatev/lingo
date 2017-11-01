@@ -31,7 +31,11 @@ func (c *ExportedIdentDocChecker) Register(fc *FileChecker) {
 }
 
 // Check implements the NodeChecker interface.
-func (c *ExportedIdentDocChecker) Check(node ast.Node, report *Report) {
+func (c *ExportedIdentDocChecker) Check(
+	node ast.Node,
+	content string,
+	report *Report) {
+
 	switch node := node.(type) {
 	case *ast.GenDecl:
 		for _, spec := range node.Specs {

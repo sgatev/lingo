@@ -33,7 +33,11 @@ func (c *ConsistentReceiverNamesChecker) Register(fc *FileChecker) {
 }
 
 // Check implements the NodeChecker interface.
-func (c *ConsistentReceiverNamesChecker) Check(node ast.Node, report *Report) {
+func (c *ConsistentReceiverNamesChecker) Check(
+	node ast.Node,
+	content string,
+	report *Report) {
+
 	decl := node.(*ast.FuncDecl)
 
 	if decl.Recv == nil || len(decl.Recv.List) == 0 {

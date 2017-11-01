@@ -205,7 +205,7 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 
 			file := ParseFileContent(test.input)
 			var report Report
-			checker.Check(file, &report)
+			checker.Check(file, "", &report)
 			assert.Equal(t, test.expected, report)
 		})
 	}

@@ -30,7 +30,11 @@ func (c *TestPackageChecker) Register(fc *FileChecker) {
 }
 
 // Check implements the NodeChecker interface.
-func (c *TestPackageChecker) Check(node ast.Node, report *Report) {
+func (c *TestPackageChecker) Check(
+	node ast.Node,
+	content string,
+	report *Report) {
+
 	file := node.(*ast.File)
 
 	isTestPackage := false

@@ -30,7 +30,11 @@ func (c *LocalReturnChecker) Register(fc *FileChecker) {
 }
 
 // Check implements the NodeChecker interface.
-func (c *LocalReturnChecker) Check(node ast.Node, report *Report) {
+func (c *LocalReturnChecker) Check(
+	node ast.Node,
+	content string,
+	report *Report) {
+
 	switch node := node.(type) {
 	case *ast.FuncDecl:
 		c.checkFuncDecl(node, report)

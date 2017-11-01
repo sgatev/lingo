@@ -32,7 +32,11 @@ func (c *MultiWordIdentNameChecker) Register(fc *FileChecker) {
 }
 
 // Check implements the NodeChecker interface.
-func (c *MultiWordIdentNameChecker) Check(node ast.Node, report *Report) {
+func (c *MultiWordIdentNameChecker) Check(
+	node ast.Node,
+	content string,
+	report *Report) {
+
 	name := node.(*ast.Ident).Name
 	if isCorrectIdentName(name) {
 		return

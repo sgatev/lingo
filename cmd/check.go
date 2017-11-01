@@ -83,13 +83,18 @@ var Check = &cobra.Command{
 		for path := range files {
 			reports[path] = &checker.Report{}
 
+			content, err := ioutil.ReadFile(path)
+			if err != nil {
+				panic(err)
+			}
+
 			file, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
 			if err != nil {
 				// TODO: handle error gracefully
 				panic(err)
 			}
 
-			fc.Check(file, reports[path])
+			fc.Check(file, string(content), reports[path])
 		}
 
 		totalErrors := 0

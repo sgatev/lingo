@@ -39,4 +39,4 @@ func (c *dummyChecker) Slug() string {
 
 func (c *dummyChecker) Register(fc *FileChecker) {}
 
-func (c *dummyChecker) Check(node ast.Node, report *Report) {}
+func (c *dummyChecker) Check(node ast.Node, content string, report *Report) {}

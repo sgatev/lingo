@@ -23,7 +23,7 @@ type NodeChecker interface {
 	Register(fc *FileChecker)
 
 	// Check checks `node` and registers violations in `report`.
-	Check(node ast.Node, report *Report)
+	Check(node ast.Node, content string, report *Report)
 }
 
 // FileChecker checks ast.File values for violations.
@@ -55,19 +55,23 @@ func (c *FileChecker) On(nodeType interface{}, checker NodeChecker) {
 }
 
 // Check checks `file` for violations and registers them in `report`.
-func (c *FileChecker) Check(file *ast.File, report *Report) {
-	c.emit(file, report)
+func (c *FileChecker) Check(file *ast.File, content string, report *Report) {
+	c.emit(file, content, report)
 
 	for _, decl := range file.Decls {
 		c.visitDecl(decl, report)
 	}
 }
 
-func (c *FileChecker) emit(node ast.Node, report *Report) {
+func (c *FileChecker) emit(node ast.Node, content string, report *Report) {
 	typeName := reflect.TypeOf(node).String()
 
 	for _, checker := range c.checkers[typeName] {
-		checker.Check(node, report)
+		emittedContent := ""
+		if len(content) > 0 {
+			emittedContent = content[node.Pos():node.End()]
+		}
+		checker.Check(node, emittedContent, report)
 	}
 }
 
@@ -81,7 +85,7 @@ func (c *FileChecker) visitDecl(decl ast.Decl, report *Report) {
 }
 
 func (c *FileChecker) visitGenDecl(decl *ast.GenDecl, report *Report) {
-	c.emit(decl, report)
+	c.emit(decl, "", report)
 
 	for _, spec := range decl.Specs {
 		switch spec := spec.(type) {
@@ -94,7 +98,7 @@ func (c *FileChecker) visitGenDecl(decl *ast.GenDecl, report *Report) {
 }
 
 func (c *FileChecker) visitTypeSpec(spec *ast.TypeSpec, report *Report) {
-	c.emit(spec, report)
+	c.emit(spec, "", report)
 
 	c.visitIdent(spec.Name, report)
 	c.visitExpr(spec.Type, report)
@@ -107,7 +111,7 @@ func (c *FileChecker) visitValueSpec(spec *ast.ValueSpec, report *Report) {
 }
 
 func (c *FileChecker) visitFuncDecl(decl *ast.FuncDecl, report *Report) {
-	c.emit(decl, report)
+	c.emit(decl, "", report)
 
 	c.visitIdent(decl.Name, report)
 
@@ -151,7 +155,7 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 }
 
 func (c *FileChecker) visitIdent(ident *ast.Ident, report *Report) {
-	c.emit(ident, report)
+	c.emit(ident, "", report)
 }
 
 func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {
@@ -166,7 +170,7 @@ func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {
 }
 
 func (c *FileChecker) visitStructType(typ *ast.StructType, report *Report) {
-	c.emit(typ, report)
+	c.emit(typ, "", report)
 
 	for _, field := range typ.Fields.List {
 		c.visitField(field, report)
@@ -174,7 +178,7 @@ func (c *FileChecker) visitStructType(typ *ast.StructType, report *Report) {
 }
 
 func (c *FileChecker) visitInterfaceType(typ *ast.InterfaceType, report *Report) {
-	c.emit(typ, report)
+	c.emit(typ, "", report)
 
 	for _, method := range typ.Methods.List {
 		c.visitField(method, report)
@@ -182,11 +186,11 @@ func (c *FileChecker) visitInterfaceType(typ *ast.InterfaceType, report *Report)
 }
 
 func (c *FileChecker) visitFuncType(typ *ast.FuncType, report *Report) {
-	c.emit(typ, report)
+	c.emit(typ, "", report)
 }
 
 func (c *FileChecker) visitField(field *ast.Field, report *Report) {
-	c.emit(field, report)
+	c.emit(field, "", report)
 
 	for _, name := range field.Names {
 		c.visitIdent(name, report)
