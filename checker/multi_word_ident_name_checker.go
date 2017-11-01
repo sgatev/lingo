@@ -53,6 +53,8 @@ func isCorrectIdentName(name string) bool {
 }
 
 var (
-	exportedNameRegexp    = regexp.MustCompile(`^([A-Z0-9][a-z0-9]*)+$`)
-	nonExportedNameRegexp = regexp.MustCompile(`^[a-z0-9]+([A-Z0-9][a-z0-9]*)*$`)
+	exportedNameRegexp = regexp.MustCompile(
+		`^([A-Z0-9][a-z0-9]*)+$`)
+	nonExportedNameRegexp = regexp.MustCompile(
+		`^[a-z0-9]+([A-Z0-9][a-z0-9]*)*$`)
 )

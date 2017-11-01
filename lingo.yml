@@ -23,3 +23,4 @@ checkers:
   test_package:
   consistent_receiver_names:
   return_error_last:
+  line_length:

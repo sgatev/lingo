@@ -79,7 +79,6 @@ var Check = &cobra.Command{
 
 		reports := map[string]*checker.Report{}
 
-		fset := token.NewFileSet()
 		for path := range files {
 			reports[path] = &checker.Report{}
 
@@ -88,7 +87,11 @@ var Check = &cobra.Command{
 				panic(err)
 			}
 
-			file, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
+			file, err := parser.ParseFile(
+				token.NewFileSet(),
+				path,
+				nil,
+				parser.ParseComments)
 			if err != nil {
 				// TODO: handle error gracefully
 				panic(err)

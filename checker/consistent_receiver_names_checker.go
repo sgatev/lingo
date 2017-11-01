@@ -15,7 +15,8 @@ type ConsistentReceiverNamesChecker struct {
 	receiverNames map[string]string
 }
 
-// NewConsistentReceiverNamesChecker constructs a ConsistentReceiverNamesChecker.
+// NewConsistentReceiverNamesChecker constructs a
+// ConsistentReceiverNamesChecker.
 func NewConsistentReceiverNamesChecker() NodeChecker {
 	return &ConsistentReceiverNamesChecker{
 		receiverNames: map[string]string{},
@@ -65,7 +66,8 @@ func (c *ConsistentReceiverNamesChecker) Check(
 		c.receiverNames[typeName] = name
 	} else if name != expectedName {
 		report.Errors = append(report.Errors,
-			fmt.Errorf("receivers in methods for type '%s' should have the same names",
+			fmt.Errorf("receivers in methods for type '%s' "+
+				"should have the same names",
 				typeName))
 	}
 }

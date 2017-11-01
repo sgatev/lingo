@@ -111,7 +111,8 @@ func (c *LocalReturnChecker) checkIdent(
 			funcName, ident.Name))
 }
 
-const localReturnErrMsg = "exported func '%s' cannot return value of local type '%s'"
+const localReturnErrMsg = "exported func '%s' cannot return value " +
+	"of local type '%s'"
 
 var internalTypes = map[string]struct{}{
 	"int": {}, "int8": {},

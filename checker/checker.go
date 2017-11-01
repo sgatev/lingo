@@ -69,7 +69,7 @@ func (c *FileChecker) emit(node ast.Node, content string, report *Report) {
 	for _, checker := range c.checkers[typeName] {
 		emittedContent := ""
 		if len(content) > 0 {
-			emittedContent = content[node.Pos():node.End()]
+			emittedContent = content[node.Pos()-1 : node.End()-1]
 		}
 		checker.Check(node, emittedContent, report)
 	}
@@ -177,7 +177,10 @@ func (c *FileChecker) visitStructType(typ *ast.StructType, report *Report) {
 	}
 }
 
-func (c *FileChecker) visitInterfaceType(typ *ast.InterfaceType, report *Report) {
+func (c *FileChecker) visitInterfaceType(
+	typ *ast.InterfaceType,
+	report *Report) {
+
 	c.emit(typ, "", report)
 
 	for _, method := range typ.Methods.List {
