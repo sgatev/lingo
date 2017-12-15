@@ -26,3 +26,4 @@ checkers:
   line_length:
     max_length: 90
     tab_width: 4
+  left_quantifiers:
