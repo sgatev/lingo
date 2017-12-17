@@ -140,6 +140,8 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 	switch expr := expr.(type) {
 	case *ast.Ident:
 		c.visitIdent(expr, report)
+	case *ast.BinaryExpr:
+		c.visitBinaryExpr(expr, report)
 	case *ast.FuncLit:
 		c.visitFuncLit(expr, report)
 	case *ast.StructType:
@@ -153,6 +155,12 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 
 func (c *FileChecker) visitIdent(ident *ast.Ident, report *Report) {
 	c.emit(ident, "", report)
+}
+
+func (c *FileChecker) visitBinaryExpr(expr *ast.BinaryExpr, report *Report) {
+	c.emit(expr, "", report)
+	c.visitExpr(expr.X, report)
+	c.visitExpr(expr.Y, report)
 }
 
 func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {
