@@ -27,6 +27,20 @@ func TestLeftQuantifiers(t *testing.T) {
 
 	tests := []test{
 		{
+			description: "not binary expression",
+			expression:  `_ = time.Second(1000)`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "basic literal expression",
+			expression:  `_ = 5 * 5`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
 			description: "basic literal is not on the left",
 			expression:  `_ = time.Second * 5`,
 			expected: Report{
@@ -36,12 +50,47 @@ func TestLeftQuantifiers(t *testing.T) {
 			},
 		},
 		{
+			description: "left quantifiers",
+			expression:  `_ = 5 * time.Second`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "no basic literals",
+			expression:  `_ = time.Duration(1) * time.Second`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "multiple left quantifiers",
+			expression:  `_ = 2 + 5 * time.Second`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "multiple non-basic expressions on the right",
+			expression:  `_ = 2 * time.Duration(2) * time.Second`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
 			description: "multiple binary operations, basic literal at the end",
-			expression:  `_ = 2 + time.Second * 3`,
+			expression:  `_ = 2 * time.Second * 3`,
 			expected: Report{
 				Errors: []error{
 					fmt.Errorf("the left operand should be a basic literal"),
 				},
+			},
+		},
+		{
+			description: "binary expression with parentheses",
+			expression:  `_ = (60 + 10) * 60 * time.Second`,
+			expected: Report{
+				Errors: nil,
 			},
 		},
 		{
@@ -51,34 +100,6 @@ func TestLeftQuantifiers(t *testing.T) {
 				Errors: []error{
 					fmt.Errorf("the left operand should be a basic literal"),
 				},
-			},
-		},
-		{
-			description: "multiple binary operations, not a basic literal at the end",
-			expression:  `_ = 60 - 10 + 60 * time.Second`,
-			expected: Report{
-				Errors: nil,
-			},
-		},
-		{
-			description: "binary expression with parentheses",
-			expression:  `_ = (60 - 10) * 60 * time.Second`,
-			expected: Report{
-				Errors: nil,
-			},
-		},
-		{
-			description: "more than one non-basic expression on the right",
-			expression:  `_ = 2 + 22 * time.Duration(1) * time.Second`,
-			expected: Report{
-				Errors: nil,
-			},
-		},
-		{
-			description: "no basic literal in binary expression",
-			expression:  `_ = time.Duration(1) * time.Second`,
-			expected: Report{
-				Errors: nil,
 			},
 		},
 	}
