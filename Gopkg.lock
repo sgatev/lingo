@@ -44,6 +44,24 @@
   version = "v1.1.4"
 
 [[projects]]
+  name = "github.com/uber-go/mapdecode"
+  packages = [".","internal/mapstructure"]
+  revision = "718b4994083e432669f44a00174c5f1bcdb1434d"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "go.uber.org/atomic"
+  packages = ["."]
+  revision = "8474b86a5a6f79c443ce4b2992817ff32cf208b8"
+  version = "v1.3.1"
+
+[[projects]]
+  name = "go.uber.org/multierr"
+  packages = ["."]
+  revision = "3c4937480c32f4c13a875a1829af76c98ca3d40a"
+  version = "v1.1.0"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/tools"
   packages = ["go/ast/astutil","go/buildutil","go/loader"]
@@ -58,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6fb4cb8c2a5b8191b94bedcbd654fb2cf72a2ad6f82dc55b34fadac53472a0a0"
+  inputs-digest = "fe7d0eab5e6ba129823686ebb51604c5188987fa9aa709a11ba69a986f24344c"
   solver-name = "gps-cdcl"
   solver-version = 1
