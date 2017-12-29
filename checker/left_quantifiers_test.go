@@ -102,6 +102,29 @@ func TestLeftQuantifiers(t *testing.T) {
 				},
 			},
 		},
+		{
+			description: "non-commutative operators",
+			expression:  `_ = time.Duration(1) - 1`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "mixed operators",
+			expression:  `_ =  time.Duration(1) * (i - 1)`,
+			expected: Report{
+				Errors: nil,
+			},
+		},
+		{
+			description: "binary operators",
+			expression:  `_ = i & 1`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("the left operand should be a basic literal"),
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {

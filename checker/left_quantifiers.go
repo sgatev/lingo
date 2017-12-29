@@ -68,6 +68,10 @@ func (c *LeftQuantifiersChecker) assess(node ast.Node) assessment {
 func (c *LeftQuantifiersChecker) assessBinaryExpr(
 	expr *ast.BinaryExpr) assessment {
 
+	if _, ok := commutativeOperators[expr.Op]; !ok {
+		return nonCommutative
+	}
+
 	x := c.assess(expr.X)
 	y := c.assess(expr.Y)
 
@@ -91,6 +95,10 @@ func (c *LeftQuantifiersChecker) assessBinaryExpr(
 	case x == noQuantifiers && y == noQuantifiers:
 		// e.g. a & a
 		return noQuantifiers
+
+	case x == nonCommutative || y == nonCommutative:
+		// e.g. n - 1
+		return nonCommutative
 
 	default:
 		return mixedQuantifiers
@@ -116,10 +124,25 @@ const (
 	// noQuantifiers indicates that an expression contains no quantifiers,
 	// e.g. a * a, including a single non-basic literal, e.g. x.
 	noQuantifiers assessment = 3
+
+	// notCommutative indicates that an expression contains a non-commutative
+	// operator.
+	nonCommutative assessment = 4
 )
 
 var validAssessments = map[assessment]struct{}{
 	allQuantifiers:  struct{}{},
 	leftQuantifiers: struct{}{},
 	noQuantifiers:   struct{}{},
+	nonCommutative:  struct{}{},
+}
+
+var commutativeOperators = map[token.Token]struct{}{
+	token.ADD:  struct{}{}, // +
+	token.MUL:  struct{}{}, // *
+	token.AND:  struct{}{}, // &
+	token.OR:   struct{}{}, // |
+	token.XOR:  struct{}{}, // ^
+	token.LAND: struct{}{}, // &&
+	token.LOR:  struct{}{}, // ||
 }
