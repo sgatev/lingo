@@ -13,12 +13,14 @@ func init() {
 // LeftQuantifiersChecker checks that when a basic literal appears in a binary
 // expression it is the left operand.
 type LeftQuantifiersChecker struct {
-	errorPositions map[token.Pos]struct{}
+	assessed map[token.Pos]struct{}
 }
 
-// NewLeftQuantifiersChecker constructs a BasicLiteralLeftOperandChecker.
+// NewLeftQuantifiersChecker constructs a LeftQuantifiersChecker.
 func NewLeftQuantifiersChecker(configData interface{}) NodeChecker {
-	return &LeftQuantifiersChecker{}
+	return &LeftQuantifiersChecker{
+		assessed: map[token.Pos]struct{}{},
+	}
 }
 
 // Register implements the NodeChecker interface.
@@ -33,44 +35,114 @@ func (c *LeftQuantifiersChecker) Check(
 	report *Report) {
 
 	expr := node.(*ast.BinaryExpr)
-	if _, ok := c.errorPositions[expr.OpPos]; ok {
+	if _, ok := c.assessed[expr.OpPos]; ok {
 		return
 	}
 
-	positions := map[token.Pos]struct{}{}
-	if !assertLeftQuantifiers(node, positions) {
-		c.errorPositions = positions
+	assessment := c.assess(node)
+	if _, ok := validAssessments[assessment]; !ok {
 		report.Errors = append(report.Errors,
 			fmt.Errorf("the left operand should be a basic literal"))
 	}
-
 }
 
-func assertLeftQuantifiers(node ast.Node, pos map[token.Pos]struct{}) bool {
+// assess determines the type of the given expression.
+func (c *LeftQuantifiersChecker) assess(node ast.Node) assessment {
 	switch expr := node.(type) {
 	case *ast.BinaryExpr:
-		pos[expr.OpPos] = struct{}{}
-		if assertBasicLit(expr.X, pos) {
-			return assertLeftQuantifiers(expr.Y, pos)
-		}
-		return !assertBasicLit(expr.Y, pos)
-	case *ast.ParenExpr:
-		return assertLeftQuantifiers(expr.X, pos)
-	default:
-		return true
-	}
-}
+		c.assessed[expr.OpPos] = struct{}{}
+		return c.assessBinaryExpr(expr)
 
-func assertBasicLit(node ast.Node, pos map[token.Pos]struct{}) bool {
-	switch expr := node.(type) {
-	case *ast.BinaryExpr:
-		pos[expr.OpPos] = struct{}{}
-		return assertBasicLit(expr.X, pos) && assertBasicLit(expr.Y, pos)
-	case *ast.ParenExpr:
-		return assertBasicLit(expr.X, pos)
 	case *ast.BasicLit:
-		return true
+		return allQuantifiers
+
+	case *ast.ParenExpr:
+		return c.assess(expr.X)
+
 	default:
-		return false
+		return noQuantifiers
 	}
+}
+
+// assessBinaryExpr determines the type of the given binary expression.
+func (c *LeftQuantifiersChecker) assessBinaryExpr(
+	expr *ast.BinaryExpr) assessment {
+
+	if _, ok := commutativeOperators[expr.Op]; !ok {
+		return nonCommutative
+	}
+
+	x := c.assess(expr.X)
+	y := c.assess(expr.Y)
+
+	switch {
+	case x == allQuantifiers && y == allQuantifiers:
+		// e.g. 3 * 4 & 5
+		return allQuantifiers
+
+	case x == allQuantifiers && y == noQuantifiers:
+		// e.g. 3 * 4 & a
+		return leftQuantifiers
+
+	case x == allQuantifiers && y == leftQuantifiers:
+		// e.g. 3 * 4 & 5 * a
+		return leftQuantifiers
+
+	case x == leftQuantifiers && y == noQuantifiers:
+		// e.g. 3 * a & a
+		return leftQuantifiers
+
+	case x == noQuantifiers && y == noQuantifiers:
+		// e.g. a & a
+		return noQuantifiers
+
+	case x == nonCommutative || y == nonCommutative:
+		// e.g. n - 1
+		return nonCommutative
+
+	default:
+		return mixedQuantifiers
+	}
+}
+
+// assessment indicates the type of an expression.
+type assessment uint
+
+const (
+	// allQuantifiers indicates that an expression contains only basic literals,
+	// e.g. 2 * 3, including single basic literals, e.g. 100.
+	allQuantifiers assessment = 0
+
+	// leftQuantifiers indicates that all quantifiers of an expression are on
+	// the left side, e.g. 5 * a.
+	leftQuantifiers assessment = 1
+
+	// mixedQuantifiers indicates that the quantifiers of an expression are not
+	// all on the left side, e.g. a * 5.
+	mixedQuantifiers assessment = 2
+
+	// noQuantifiers indicates that an expression contains no quantifiers,
+	// e.g. a * a, including a single non-basic literal, e.g. x.
+	noQuantifiers assessment = 3
+
+	// notCommutative indicates that an expression contains a non-commutative
+	// operator.
+	nonCommutative assessment = 4
+)
+
+var validAssessments = map[assessment]struct{}{
+	allQuantifiers:  struct{}{},
+	leftQuantifiers: struct{}{},
+	noQuantifiers:   struct{}{},
+	nonCommutative:  struct{}{},
+}
+
+var commutativeOperators = map[token.Token]struct{}{
+	token.ADD:  struct{}{}, // +
+	token.MUL:  struct{}{}, // *
+	token.AND:  struct{}{}, // &
+	token.OR:   struct{}{}, // |
+	token.XOR:  struct{}{}, // ^
+	token.LAND: struct{}{}, // &&
+	token.LOR:  struct{}{}, // ||
 }
