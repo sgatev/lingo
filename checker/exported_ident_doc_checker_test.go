@@ -72,7 +72,7 @@ func TestExportedIdentDocChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "var",
+			description: "func",
 			input: `
 				package test
 
@@ -160,6 +160,130 @@ func TestExportedIdentDocChecker(t *testing.T) {
 		t.Run(test.description, func(t *testing.T) {
 			checker := NewFileChecker()
 			checker.Register(NewExportedIdentDocChecker(nil))
+
+			file := ParseFileContent(test.input)
+			var report Report
+			checker.Check(file, "", &report)
+			assert.Equal(t, test.expected, report)
+		})
+	}
+}
+
+func TestExportedIdentDocCheckerPrefix(t *testing.T) {
+	config := &ExportedIdentDocCheckerConfig{
+		HasIdentPrefix: true,
+	}
+
+	tests := []struct {
+		description string
+		input       string
+		expected    Report
+	}{
+		{
+			description: "type",
+			input: `
+				package test
+
+				// Some documentation.
+				type FooBar1 struct{}
+
+				// FooBar2 is documented.
+				type FooBar2 struct{}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+				},
+			},
+		},
+		{
+			description: "var",
+			input: `
+				package test
+
+				// Some documentation.
+				var FooBar1 int
+
+				// FooBar2 is documented.
+				var FooBar2 string
+
+				var FooBar3 string
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+				},
+			},
+		},
+		{
+			description: "groped identifiers",
+			input: `
+				package test
+
+				// Some documentation.
+				var (
+					// Some other documentation.
+					FooBar1 int
+
+					// FooBar2 is documented.
+					FooBar2 string
+				)
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+				},
+			},
+		},
+		{
+			description: "func",
+			input: `
+				package test
+
+				// Some documentation.
+				func Foo1() {}
+
+				// Foo2 is documented.
+				func Foo2() {}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("expected the comment to start with 'Foo1'"),
+				},
+			},
+		},
+		{
+			description: "fields",
+			input: `
+				package test
+
+				// Some documentation.
+				type Foo struct {
+
+					// Some documentation.
+					FooBar1	int
+
+					// FooBar2 is documented.
+					FooBar2	int
+
+					// Fields are documented.
+					FooBar7, fooBar8, FooBar9 int
+				}
+			`,
+			expected: Report{
+				Errors: []error{
+					fmt.Errorf("expected the comment to start with 'Foo'"),
+					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.description, func(t *testing.T) {
+			checker := NewFileChecker()
+			checker.Register(NewExportedIdentDocChecker(config))
 
 			file := ParseFileContent(test.input)
 			var report Report
