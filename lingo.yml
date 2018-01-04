@@ -20,6 +20,7 @@ checkers:
   local_return:
   multi_word_ident_name:
   exported_ident_doc:
+    has_ident_prefix: true
   test_package:
   consistent_receiver_names:
   return_error_last:
