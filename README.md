@@ -14,7 +14,7 @@ for a project's code style.
 
 ## Installation
 
-To install the latest version of lingo, execute:
+To install the latest version of lingo execute:
 
 ```sh
 go get -u github.com/s2gatev/lingo
@@ -54,12 +54,14 @@ checkers:
   consistent_receiver_names:
 ```
 
+[Here](doc/checkers.md) is a list of the available checkers.
+
 ## Checking
 
-To check all files rooted at the current directory for lingo viloations execute:
+To check all files rooted at the current directory for lingo violations execute:
 
 ```sh
-lingo check ./... --config lingo.yml
+lingo check ./...
 ```
 
 ## Contributing
