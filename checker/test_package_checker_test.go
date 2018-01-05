@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -27,8 +26,11 @@ func TestTestPackageChecker(t *testing.T) {
 				func TestFoo(t *testing.t) {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("package 'foo' should be named 'foo_test'"),
+				Errors: []Error{
+					{
+						Pos:     6,
+						Message: "package 'foo' should be named 'foo_test'",
+					},
 				},
 			},
 		},

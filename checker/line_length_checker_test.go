@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -24,8 +23,11 @@ func TestLineLengthChecker(t *testing.T) {
 
 				func TestFooBarFunctionVeryLong(a int, b int, c int, d int) (error, float64) {}`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("line 3 is too long"),
+				Errors: []Error{
+					{
+						Pos:     11,
+						Message: "line is too long",
+					},
 				},
 			},
 		},

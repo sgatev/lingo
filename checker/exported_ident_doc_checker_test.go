@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -30,8 +29,11 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				type FooBar3 struct{}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     113,
+						Message: "exported identifier 'FooBar3' is not documented",
+					},
 				},
 			},
 		},
@@ -48,8 +50,11 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				const TheAnswer3 = 42
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported identifier 'TheAnswer3' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     117,
+						Message: "exported identifier 'TheAnswer3' is not documented",
+					},
 				},
 			},
 		},
@@ -66,8 +71,11 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				var TheAnswer3 = 42
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported identifier 'TheAnswer3' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     111,
+						Message: "exported identifier 'TheAnswer3' is not documented",
+					},
 				},
 			},
 		},
@@ -84,8 +92,11 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				func Foo3() {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported identifier 'Foo3' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     91,
+						Message: "exported identifier 'Foo3' is not documented",
+					},
 				},
 			},
 		},
@@ -109,10 +120,19 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
-					fmt.Errorf("exported identifier 'FooBar4' is not documented"),
-					fmt.Errorf("exported identifier 'FooBar6' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     139,
+						Message: "exported identifier 'FooBar3' is not documented",
+					},
+					{
+						Pos:     157,
+						Message: "exported identifier 'FooBar4' is not documented",
+					},
+					{
+						Pos:     157,
+						Message: "exported identifier 'FooBar6' is not documented",
+					},
 				},
 			},
 		},
@@ -131,8 +151,11 @@ func TestExportedIdentDocChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     146,
+						Message: "exported identifier 'FooBar3' is not documented",
+					},
 				},
 			},
 		},
@@ -191,8 +214,11 @@ func TestExportedIdentDocCheckerPrefix(t *testing.T) {
 				type FooBar2 struct{}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: "expected the comment to start with 'FooBar1'",
+					},
 				},
 			},
 		},
@@ -210,9 +236,15 @@ func TestExportedIdentDocCheckerPrefix(t *testing.T) {
 				var FooBar3 string
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("expected the comment to start with 'FooBar1'"),
-					fmt.Errorf("exported identifier 'FooBar3' is not documented"),
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: "expected the comment to start with 'FooBar1'",
+					},
+					{
+						Pos:     130,
+						Message: "exported identifier 'FooBar3' is not documented",
+					},
 				},
 			},
 		},
@@ -231,8 +263,11 @@ func TestExportedIdentDocCheckerPrefix(t *testing.T) {
 				)
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+				Errors: []Error{
+					{
+						Pos:     62,
+						Message: "expected the comment to start with 'FooBar1'",
+					},
 				},
 			},
 		},
@@ -248,8 +283,11 @@ func TestExportedIdentDocCheckerPrefix(t *testing.T) {
 				func Foo2() {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("expected the comment to start with 'Foo1'"),
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: "expected the comment to start with 'Foo1'",
+					},
 				},
 			},
 		},
@@ -272,9 +310,15 @@ func TestExportedIdentDocCheckerPrefix(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("expected the comment to start with 'Foo'"),
-					fmt.Errorf("expected the comment to start with 'FooBar1'"),
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: "expected the comment to start with 'Foo'",
+					},
+					{
+						Pos:     75,
+						Message: "expected the comment to start with 'FooBar1'",
+					},
 				},
 			},
 		},

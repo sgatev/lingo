@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -26,8 +25,11 @@ func TestConsistentReceiverNamesChecker(t *testing.T) {
 				func (b Foo) Bar() {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("receivers in methods for type 'Foo' should have the same names"),
+				Errors: []Error{
+					{
+						Pos:     49,
+						Message: "receivers in methods for type 'Foo' should have the same names",
+					},
 				},
 			},
 		},
@@ -40,8 +42,11 @@ func TestConsistentReceiverNamesChecker(t *testing.T) {
 				func (b *Foo) Bar() {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("receivers in methods for type 'Foo' should have the same names"),
+				Errors: []Error{
+					{
+						Pos:     50,
+						Message: "receivers in methods for type 'Foo' should have the same names",
+					},
 				},
 			},
 		},

@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -79,9 +78,15 @@ func TestLocalReturnChecker(t *testing.T) {
 				func (f *Foo) Foo2() bar {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported func 'Foo1' cannot return value of local type 'bar'"),
-					fmt.Errorf("exported func 'Foo2' cannot return value of local type 'bar'"),
+				Errors: []Error{
+					{
+						Pos:     36,
+						Message: "exported func 'Foo1' cannot return value of local type 'bar'",
+					},
+					{
+						Pos:     69,
+						Message: "exported func 'Foo2' cannot return value of local type 'bar'",
+					},
 				},
 			},
 		},
@@ -95,11 +100,23 @@ func TestLocalReturnChecker(t *testing.T) {
 				func (f *Foo) Foo2() (bar1, Bar2, bar3) {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported func 'Foo1' cannot return value of local type 'bar1'"),
-					fmt.Errorf("exported func 'Foo1' cannot return value of local type 'bar3'"),
-					fmt.Errorf("exported func 'Foo2' cannot return value of local type 'bar1'"),
-					fmt.Errorf("exported func 'Foo2' cannot return value of local type 'bar3'"),
+				Errors: []Error{
+					{
+						Pos:     37,
+						Message: "exported func 'Foo1' cannot return value of local type 'bar1'",
+					},
+					{
+						Pos:     49,
+						Message: "exported func 'Foo1' cannot return value of local type 'bar3'",
+					},
+					{
+						Pos:     85,
+						Message: "exported func 'Foo2' cannot return value of local type 'bar1'",
+					},
+					{
+						Pos:     97,
+						Message: "exported func 'Foo2' cannot return value of local type 'bar3'",
+					},
 				},
 			},
 		},
@@ -126,9 +143,15 @@ func TestLocalReturnChecker(t *testing.T) {
 				func (f *Foo) Foo2() chan bar {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported func 'Foo1' cannot return value of local type 'bar'"),
-					fmt.Errorf("exported func 'Foo2' cannot return value of local type 'bar'"),
+				Errors: []Error{
+					{
+						Pos:     41,
+						Message: "exported func 'Foo1' cannot return value of local type 'bar'",
+					},
+					{
+						Pos:     79,
+						Message: "exported func 'Foo2' cannot return value of local type 'bar'",
+					},
 				},
 			},
 		},
@@ -142,9 +165,15 @@ func TestLocalReturnChecker(t *testing.T) {
 				func (f *Foo) Foo2() []bar {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported func 'Foo1' cannot return value of local type 'bar'"),
-					fmt.Errorf("exported func 'Foo2' cannot return value of local type 'bar'"),
+				Errors: []Error{
+					{
+						Pos:     38,
+						Message: "exported func 'Foo1' cannot return value of local type 'bar'",
+					},
+					{
+						Pos:     73,
+						Message: "exported func 'Foo2' cannot return value of local type 'bar'",
+					},
 				},
 			},
 		},
@@ -158,9 +187,15 @@ func TestLocalReturnChecker(t *testing.T) {
 				func (f *Foo) Foo2() [21]bar {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported func 'Foo1' cannot return value of local type 'bar'"),
-					fmt.Errorf("exported func 'Foo2' cannot return value of local type 'bar'"),
+				Errors: []Error{
+					{
+						Pos:     40,
+						Message: "exported func 'Foo1' cannot return value of local type 'bar'",
+					},
+					{
+						Pos:     77,
+						Message: "exported func 'Foo2' cannot return value of local type 'bar'",
+					},
 				},
 			},
 		},
@@ -200,8 +235,11 @@ func TestLocalReturnChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("exported func 'Foo' cannot return value of local type 'bar'"),
+				Errors: []Error{
+					{
+						Pos:     59,
+						Message: "exported func 'Foo' cannot return value of local type 'bar'",
+					},
 				},
 			},
 		},

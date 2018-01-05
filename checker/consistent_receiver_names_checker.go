@@ -62,9 +62,10 @@ func (c *ConsistentReceiverNamesChecker) Check(
 	if !ok {
 		c.receiverNames[typeName] = name
 	} else if name != expectedName {
-		report.Errors = append(report.Errors,
-			fmt.Errorf("receivers in methods for type '%s' "+
-				"should have the same names",
-				typeName))
+		report.Errors = append(report.Errors, Error{
+			Pos: node.Pos(),
+			Message: fmt.Sprintf("receivers in methods for type '%s' "+
+				"should have the same names", typeName),
+		})
 	}
 }

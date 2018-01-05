@@ -3,6 +3,7 @@ package checker
 import (
 	"fmt"
 	"go/ast"
+	"go/token"
 	"strings"
 
 	"github.com/uber-go/mapdecode"
@@ -54,13 +55,18 @@ func (c *LineLengthChecker) Check(
 
 	tabAsSpaces := strings.Repeat(" ", c.tabWidth)
 
+	pos := 0
 	lines := strings.Split(content, "\n")
-	for idx, line := range lines {
+	for _, line := range lines {
 		line = strings.Replace(line, "\t", tabAsSpaces, -1)
 
 		if len(line) > c.maxLength {
-			report.Errors = append(report.Errors,
-				fmt.Errorf("line %d is too long", idx+1))
+			report.Errors = append(report.Errors, Error{
+				Pos:     token.Pos(pos),
+				Message: fmt.Sprintf("line is too long"),
+			})
 		}
+
+		pos += len(line)
 	}
 }

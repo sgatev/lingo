@@ -2,14 +2,25 @@ package checker
 
 import (
 	"go/ast"
+	"go/token"
 	"reflect"
 )
+
+// Error is a description of a checker violation.
+type Error struct {
+
+	// Pos is the position in a file where the error occurred.
+	Pos token.Pos
+
+	// Message is the error message.
+	Message string
+}
 
 // Report collects the results of a run of some checkers.
 type Report struct {
 
 	// Errors contains all violations registered by the checkers.
-	Errors []error
+	Errors []Error
 }
 
 // NodeChecker checks ast.Node values for violations.

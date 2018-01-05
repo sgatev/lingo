@@ -49,7 +49,9 @@ func (c *TestPackageChecker) Check(
 		return
 	}
 
-	report.Errors = append(report.Errors,
-		fmt.Errorf("package '%s' should be named '%s_test'",
-			packageName, packageName))
+	report.Errors = append(report.Errors, Error{
+		Pos: node.Pos(),
+		Message: fmt.Sprintf("package '%s' should be named '%s_test'",
+			packageName, packageName),
+	})
 }

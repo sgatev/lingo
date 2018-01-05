@@ -37,8 +37,10 @@ func (c *MultiWordIdentNameChecker) Check(
 		return
 	}
 
-	report.Errors = append(report.Errors,
-		fmt.Errorf("name '%s' is not valid", name))
+	report.Errors = append(report.Errors, Error{
+		Pos:     node.Pos(),
+		Message: fmt.Sprintf("name '%s' is not valid", name),
+	})
 }
 
 func isCorrectIdentName(name string) bool {

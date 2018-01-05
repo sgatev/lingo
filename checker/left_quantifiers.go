@@ -41,8 +41,10 @@ func (c *LeftQuantifiersChecker) Check(
 
 	assessment := c.assess(node)
 	if _, ok := validAssessments[assessment]; !ok {
-		report.Errors = append(report.Errors,
-			fmt.Errorf("the left operand should be a basic literal"))
+		report.Errors = append(report.Errors, Error{
+			Pos:     node.Pos(),
+			Message: fmt.Sprintf("the left operand should be a basic literal"),
+		})
 	}
 }
 

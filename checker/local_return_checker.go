@@ -101,9 +101,10 @@ func (c *LocalReturnChecker) checkIdent(
 		return
 	}
 
-	report.Errors = append(report.Errors,
-		fmt.Errorf(localReturnErrMsg,
-			funcName, ident.Name))
+	report.Errors = append(report.Errors, Error{
+		Pos:     ident.Pos(),
+		Message: fmt.Sprintf(localReturnErrMsg, funcName, ident.Name),
+	})
 }
 
 const localReturnErrMsg = "exported func '%s' cannot return value " +

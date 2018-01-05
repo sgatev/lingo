@@ -79,9 +79,11 @@ func (c *ExportedIdentDocChecker) checkTypeSpec(
 	}
 
 	if doc == nil {
-		report.Errors = append(report.Errors,
-			fmt.Errorf("exported identifier '%s' is not documented",
-				spec.Name.Name))
+		report.Errors = append(report.Errors, Error{
+			Pos: spec.Pos(),
+			Message: fmt.Sprintf("exported identifier '%s' is not documented",
+				spec.Name.Name),
+		})
 		return
 	}
 
@@ -99,9 +101,11 @@ func (c *ExportedIdentDocChecker) checkValueSpec(
 		}
 
 		if doc == nil && spec.Doc == nil {
-			report.Errors = append(report.Errors,
-				fmt.Errorf("exported identifier '%s' is not documented",
-					name.Name))
+			report.Errors = append(report.Errors, Error{
+				Pos: spec.Pos(),
+				Message: fmt.Sprintf("exported identifier '%s' is not documented",
+					name.Name),
+			})
 			continue
 		}
 
@@ -122,9 +126,11 @@ func (c *ExportedIdentDocChecker) checkFuncDecl(
 	}
 
 	if decl.Doc == nil {
-		report.Errors = append(report.Errors,
-			fmt.Errorf("exported identifier '%s' is not documented",
-				decl.Name.Name))
+		report.Errors = append(report.Errors, Error{
+			Pos: decl.Pos(),
+			Message: fmt.Sprintf("exported identifier '%s' is not documented",
+				decl.Name.Name),
+		})
 		return
 	}
 
@@ -148,9 +154,11 @@ func (c *ExportedIdentDocChecker) checkField(
 
 	if field.Doc == nil {
 		for _, name := range exported {
-			report.Errors = append(report.Errors,
-				fmt.Errorf("exported identifier '%s' is not documented",
-					name))
+			report.Errors = append(report.Errors, Error{
+				Pos: field.Pos(),
+				Message: fmt.Sprintf("exported identifier '%s' is not documented",
+					name),
+			})
 		}
 		return
 	}
@@ -170,7 +178,9 @@ func (c *ExportedIdentDocChecker) checkPrefix(
 	}
 
 	if !strings.HasPrefix(doc.Text(), name) {
-		report.Errors = append(report.Errors,
-			fmt.Errorf("expected the comment to start with '%s'", name))
+		report.Errors = append(report.Errors, Error{
+			Pos:     doc.Pos(),
+			Message: fmt.Sprintf("expected the comment to start with '%s'", name),
+		})
 	}
 }

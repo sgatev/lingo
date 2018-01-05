@@ -81,9 +81,11 @@ var Check = &cobra.Command{
 		}
 
 		reports := map[string]*checker.Report{}
+		fileSets := map[string]*token.FileSet{}
 
 		for path := range files {
 			reports[path] = &checker.Report{}
+			fileSets[path] = token.NewFileSet()
 
 			content, err := ioutil.ReadFile(path)
 			if err != nil {
@@ -91,7 +93,7 @@ var Check = &cobra.Command{
 			}
 
 			file, err := parser.ParseFile(
-				token.NewFileSet(),
+				fileSets[path],
 				path,
 				nil,
 				parser.ParseComments)
@@ -111,7 +113,8 @@ var Check = &cobra.Command{
 
 			fmt.Println(path)
 			for _, err := range report.Errors {
-				fmt.Printf("\t- %s\n", err.Error())
+				position := fileSets[path].Position(err.Pos)
+				fmt.Printf("\t- line %d: %s\n", position.Line, err.Message)
 			}
 			fmt.Println()
 

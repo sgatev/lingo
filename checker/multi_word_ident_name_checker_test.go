@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -39,10 +38,19 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'foo_bar3' is not valid"),
-					fmt.Errorf("name 'foo_bar6' is not valid"),
-					fmt.Errorf("name 'foo_bar9' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     81,
+						Message: "name 'foo_bar3' is not valid",
+					},
+					{
+						Pos:     181,
+						Message: "name 'foo_bar6' is not valid",
+					},
+					{
+						Pos:     285,
+						Message: "name 'foo_bar9' is not valid",
+					},
 				},
 			},
 		},
@@ -70,11 +78,23 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'the_answer3' is not valid"),
-					fmt.Errorf("name 'the_answer6' is not valid"),
-					fmt.Errorf("name 'the_answer9' is not valid"),
-					fmt.Errorf("name 'foo_bar' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     82,
+						Message: "name 'the_answer3' is not valid",
+					},
+					{
+						Pos:     182,
+						Message: "name 'the_answer6' is not valid",
+					},
+					{
+						Pos:     286,
+						Message: "name 'the_answer9' is not valid",
+					},
+					{
+						Pos:     338,
+						Message: "name 'foo_bar' is not valid",
+					},
 				},
 			},
 		},
@@ -106,12 +126,27 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'the_answer3' is not valid"),
-					fmt.Errorf("name 'the_answer6' is not valid"),
-					fmt.Errorf("name 'the_answer9' is not valid"),
-					fmt.Errorf("name 'foo_bar6' is not valid"),
-					fmt.Errorf("name 'foo_bar3' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     76,
+						Message: "name 'the_answer3' is not valid",
+					},
+					{
+						Pos:     170,
+						Message: "name 'the_answer6' is not valid",
+					},
+					{
+						Pos:     268,
+						Message: "name 'the_answer9' is not valid",
+					},
+					{
+						Pos:     338,
+						Message: "name 'foo_bar6' is not valid",
+					},
+					{
+						Pos:     391,
+						Message: "name 'foo_bar3' is not valid",
+					},
 				},
 			},
 		},
@@ -125,8 +160,11 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				func foo_bar3() {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'foo_bar3' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     73,
+						Message: "name 'foo_bar3' is not valid",
+					},
 				},
 			},
 		},
@@ -142,8 +180,11 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				func (f *Foo) foo_bar3() {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'foo_bar3' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     123,
+						Message: "name 'foo_bar3' is not valid",
+					},
 				},
 			},
 		},
@@ -171,11 +212,23 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'foo_bar3' is not valid"),
-					fmt.Errorf("name 'foo_bar6' is not valid"),
-					fmt.Errorf("name 'foo_bar9' is not valid"),
-					fmt.Errorf("name 'foo_bar12' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     83,
+						Message: "name 'foo_bar3' is not valid",
+					},
+					{
+						Pos:     120,
+						Message: "name 'foo_bar6' is not valid",
+					},
+					{
+						Pos:     224,
+						Message: "name 'foo_bar9' is not valid",
+					},
+					{
+						Pos:     264,
+						Message: "name 'foo_bar12' is not valid",
+					},
 				},
 			},
 		},
@@ -191,8 +244,11 @@ func TestMultiWordIdentNameChecker(t *testing.T) {
 				}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("name 'foo_bar3' is not valid"),
+				Errors: []Error{
+					{
+						Pos:     88,
+						Message: "name 'foo_bar3' is not valid",
+					},
 				},
 			},
 		},

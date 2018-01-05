@@ -44,8 +44,11 @@ func TestLeftQuantifiers(t *testing.T) {
 			description: "basic literal is not on the left",
 			expression:  `_ = time.Second * 5`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("the left operand should be a basic literal"),
+				Errors: []Error{
+					{
+						Pos:     58,
+						Message: "the left operand should be a basic literal",
+					},
 				},
 			},
 		},
@@ -81,8 +84,11 @@ func TestLeftQuantifiers(t *testing.T) {
 			description: "multiple binary operations, basic literal at the end",
 			expression:  `_ = 2 * time.Second * 3`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("the left operand should be a basic literal"),
+				Errors: []Error{
+					{
+						Pos:     58,
+						Message: "the left operand should be a basic literal",
+					},
 				},
 			},
 		},
@@ -97,8 +103,11 @@ func TestLeftQuantifiers(t *testing.T) {
 			description: "mixed expressions",
 			expression:  `_ = time.Duration(1) * 2 * 5 * time.Second`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("the left operand should be a basic literal"),
+				Errors: []Error{
+					{
+						Pos:     58,
+						Message: "the left operand should be a basic literal",
+					},
 				},
 			},
 		},
@@ -120,8 +129,11 @@ func TestLeftQuantifiers(t *testing.T) {
 			description: "binary operators",
 			expression:  `_ = i & 1`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("the left operand should be a basic literal"),
+				Errors: []Error{
+					{
+						Pos:     58,
+						Message: "the left operand should be a basic literal",
+					},
 				},
 			},
 		},

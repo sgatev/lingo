@@ -49,8 +49,10 @@ func (c *ReturnErrorLastChecker) Check(
 	}
 
 	if errorNotLast {
-		report.Errors = append(report.Errors,
-			fmt.Errorf("func '%s' should return error as the last value",
-				decl.Name.Name))
+		report.Errors = append(report.Errors, Error{
+			Pos: node.Pos(),
+			Message: fmt.Sprintf("func '%s' should return error as the last value",
+				decl.Name.Name),
+		})
 	}
 }

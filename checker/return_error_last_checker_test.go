@@ -1,7 +1,6 @@
 package checker_test
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -25,8 +24,11 @@ func TestReturnErrorLastChecker(t *testing.T) {
 				func Foo() (int, error, bool) {}
 			`,
 			expected: Report{
-				Errors: []error{
-					fmt.Errorf("func 'Foo' should return error as the last value"),
+				Errors: []Error{
+					{
+						Pos:     23,
+						Message: "func 'Foo' should return error as the last value",
+					},
 				},
 			},
 		},
