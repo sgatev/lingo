@@ -19,11 +19,11 @@ type LineLengthConfig struct {
 	// MaxLength is the maximum number of characters permitted on a single line.
 	MaxLength int `mapdecode:"max_length"`
 
-	// TabWidth is the number of characters equivilent to a single tab.
+	// TabWidth is the number of characters equivalent to a single tab.
 	TabWidth int `mapdecode:"tab_width"`
 }
 
-// LineLengthChecker checks that code lines are withing specific length limits.
+// LineLengthChecker checks that code lines are within specific length limits.
 type LineLengthChecker struct {
 	maxLength int
 	tabWidth  int
