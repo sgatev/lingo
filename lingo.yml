@@ -23,6 +23,7 @@ checkers:
     has_ident_prefix: true
   test_package:
   consistent_receiver_names:
+  pass_context_first:
   return_error_last:
   line_length:
     max_length: 90
