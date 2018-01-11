@@ -67,6 +67,15 @@ type ProcessTracker struct{}  // OK
 type process_tracker struct{} // not OK
 ```
 
+## pass_context_first
+
+Checks function declarations which have `context.Context` in them. If the context is not
+the first argument, the checker will report an error.
+
+```go
+func Get(id string, ctx context.Context) () {} // not OK, `ctx` should be first
+```
+
 ## return_error_last
 
 Checks that `error` is the last value returned by a function.
