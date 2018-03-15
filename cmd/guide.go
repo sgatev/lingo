@@ -50,6 +50,14 @@ var Guide = &cobra.Command{
 			checkers = append(checkers, c)
 		}
 
+		configPath, err := filepath.Abs(configFile)
+		if err != nil {
+			// TODO: handle error gracefully
+			panic(err)
+		}
+
+		project := filepath.Base(filepath.Dir(configPath))
+
 		var items []guideItem
 		for _, checker := range checkers {
 			items = append(items, guideItem{
@@ -71,7 +79,12 @@ var Guide = &cobra.Command{
 		}
 		defer guide.Close()
 
-		if err := guideTemplate.Execute(guide, items); err != nil {
+		data := map[string]interface{}{
+			"Project": project,
+			"Items":   items,
+		}
+
+		if err := guideTemplate.Execute(guide, data); err != nil {
 			return
 		}
 
@@ -111,15 +124,40 @@ const guideContent = `
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>{{.Project}} lingo</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+			}
+
+			h1 {
+				padding-bottom: 10px;
+				border-bottom: 1px solid #eaecef;
+			}
+
+			.page {
+				margin: 0 auto;
+				width: 980px;
+				padding: 45px;
+				border: 1px solid #ddd;
+			}
+
+			.item:not(:last-child) {
+				border-bottom: 1px solid #eaecef;
+			}
+		</style>
 	</head>
 	<body>
-		{{range .}}
-			<div>
+		<div class="page">
+			<h1>{{.Project}} lingo</h1>
+			{{range .Items}}
+			<div class="item">
 				<h2>{{.Title}}</h2>
 				<p>{{.Description}}</p>
 			</div>
-		{{end}}
+			{{end}}
+		</div>
 	</body>
 </html>
 `
