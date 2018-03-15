@@ -23,6 +23,16 @@ type Report struct {
 	Errors []Error
 }
 
+// Example shows how to adhere and not adere to a rule.
+type Example struct {
+
+	// Good is an example of sticking to the rule.
+	Good string
+
+	// Bad is a counter-example that shows how to not apply the rule.
+	Bad string
+}
+
 // NodeChecker checks ast.Node values for violations.
 type NodeChecker interface {
 
@@ -31,6 +41,9 @@ type NodeChecker interface {
 
 	// Description returns the detailed description of the node checker.
 	Description() string
+
+	// Examples is a set of examples that demonstrate the node checker rule.
+	Examples() []Example
 
 	// Register registers the node checker for specific types
 	// of nodes in `fc`.

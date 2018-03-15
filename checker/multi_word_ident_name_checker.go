@@ -31,6 +31,20 @@ func (c *MultiWordIdentNameChecker) Description() string {
 	return `An identifier consisting of multiple words must be in camelCase form.`
 }
 
+// Examples implements the NodeChecker interface.
+func (c *MultiWordIdentNameChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `type processTracker struct{}`,
+			Bad:  `type process_tracker struct{}`,
+		},
+		{
+			Good: `type ProcessTracker struct{}`,
+			Bad:  `type Process_Tracker struct{}`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *MultiWordIdentNameChecker) Register(fc *FileChecker) {
 	fc.On(&ast.Ident{}, c)

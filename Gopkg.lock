@@ -2,10 +2,72 @@
 
 
 [[projects]]
+  name = "github.com/alecthomas/chroma"
+  packages = [
+    ".",
+    "formatters",
+    "formatters/html",
+    "lexers",
+    "lexers/a",
+    "lexers/b",
+    "lexers/c",
+    "lexers/d",
+    "lexers/e",
+    "lexers/f",
+    "lexers/g",
+    "lexers/h",
+    "lexers/i",
+    "lexers/internal",
+    "lexers/j",
+    "lexers/k",
+    "lexers/l",
+    "lexers/m",
+    "lexers/n",
+    "lexers/o",
+    "lexers/p",
+    "lexers/q",
+    "lexers/r",
+    "lexers/s",
+    "lexers/t",
+    "lexers/v",
+    "lexers/w",
+    "lexers/x",
+    "lexers/y",
+    "quick",
+    "styles"
+  ]
+  revision = "3020e2ea8c6b1a9c2336022d847c4392c3997f02"
+  version = "v0.4.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/alecthomas/template"
+  packages = [
+    ".",
+    "parse"
+  ]
+  revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/danwakefield/fnmatch"
+  packages = ["."]
+  revision = "cbb64ac3d964b81592e64f957ad53df015803288"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
+
+[[projects]]
+  name = "github.com/dlclark/regexp2"
+  packages = [
+    ".",
+    "syntax"
+  ]
+  revision = "487489b64fb796de2e55f4e8a4ad1e145f80e957"
+  version = "v1.1.6"
 
 [[projects]]
   name = "github.com/inconshreveable/mousetrap"
@@ -16,7 +78,10 @@
 [[projects]]
   branch = "master"
   name = "github.com/mattn/go-zglob"
-  packages = [".","fastwalk"]
+  packages = [
+    ".",
+    "fastwalk"
+  ]
   revision = "4ecb59231939b2e499b1f2fd8f075565977d2452"
 
 [[projects]]
@@ -45,7 +110,10 @@
 
 [[projects]]
   name = "github.com/uber-go/mapdecode"
-  packages = [".","internal/mapstructure"]
+  packages = [
+    ".",
+    "internal/mapstructure"
+  ]
   revision = "718b4994083e432669f44a00174c5f1bcdb1434d"
   version = "v1.0.0"
 
@@ -64,7 +132,11 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/tools"
-  packages = ["go/ast/astutil","go/buildutil","go/loader"]
+  packages = [
+    "go/ast/astutil",
+    "go/buildutil",
+    "go/loader"
+  ]
   revision = "9bd2f442688b66c5289262d70f537c2ecf81d7de"
 
 [[projects]]
@@ -76,6 +148,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fe7d0eab5e6ba129823686ebb51604c5188987fa9aa709a11ba69a986f24344c"
+  inputs-digest = "14d2e86bdfdfebc2ce77227868626affc1bb11712c9e34537dcfc54b08cbc7fc"
   solver-name = "gps-cdcl"
   solver-version = 1

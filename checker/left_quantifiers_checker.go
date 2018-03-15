@@ -34,6 +34,16 @@ func (c *LeftQuantifiersChecker) Description() string {
 		`the left operand.`
 }
 
+// Examples implements the NodeChecker interface.
+func (c *LeftQuantifiersChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `_ = 5 * time.Minute`,
+			Bad:  `_ = time.Minute * 5`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *LeftQuantifiersChecker) Register(fc *FileChecker) {
 	fc.On(&ast.BinaryExpr{}, c)

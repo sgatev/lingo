@@ -52,6 +52,11 @@ func (c *LineLengthChecker) Description() string {
 	return fmt.Sprintf(`The maximum line of a length is %d symbols.`, c.maxLength)
 }
 
+// Examples implements the NodeChecker interface.
+func (c *LineLengthChecker) Examples() []Example {
+	return nil
+}
+
 // Register implements the NodeChecker interface.
 func (c *LineLengthChecker) Register(fc *FileChecker) {
 	fc.On(&ast.File{}, c)

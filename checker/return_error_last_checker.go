@@ -28,6 +28,16 @@ func (c *ReturnErrorLastChecker) Description() string {
 	return `A function must return error as its last argument.`
 }
 
+// Examples implements the NodeChecker interface.
+func (c *ReturnErrorLastChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `func Create() (int, error) {}`,
+			Bad:  `func Create() (error, int) {}`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *ReturnErrorLastChecker) Register(fc *FileChecker) {
 	fc.On(&ast.FuncDecl{}, c)
