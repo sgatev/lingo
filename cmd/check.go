@@ -14,8 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const defaultConfigFilename = "lingo.yml"
-
 func init() {
 	Check.PersistentFlags().StringVar(
 		&configFile, "config", defaultConfigFilename, "config file")
@@ -128,5 +126,3 @@ var Check = &cobra.Command{
 		}
 	},
 }
-
-var configFile string
