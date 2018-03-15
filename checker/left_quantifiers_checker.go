@@ -23,6 +23,17 @@ func NewLeftQuantifiersChecker(configData interface{}) NodeChecker {
 	}
 }
 
+// Title implements the NodeChecker interface.
+func (c *LeftQuantifiersChecker) Title() string {
+	return "Left Expression Quantifiers"
+}
+
+// Description implements the NodeChecker interface.
+func (c *LeftQuantifiersChecker) Description() string {
+	return `When a number literal appears in a binary expression it must be ` +
+		`the left operand.`
+}
+
 // Register implements the NodeChecker interface.
 func (c *LeftQuantifiersChecker) Register(fc *FileChecker) {
 	fc.On(&ast.BinaryExpr{}, c)

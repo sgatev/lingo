@@ -19,6 +19,16 @@ func NewTestPackageChecker(configData interface{}) NodeChecker {
 	return &TestPackageChecker{}
 }
 
+// Title implements the NodeChecker interface.
+func (c *TestPackageChecker) Title() string {
+	return "Test Package"
+}
+
+// Description implements the NodeChecker interface.
+func (c *TestPackageChecker) Description() string {
+	return `Tests must be defined in a separate package.`
+}
+
 // Register implements the NodeChecker interface.
 func (c *TestPackageChecker) Register(fc *FileChecker) {
 	fc.On(&ast.File{}, c)

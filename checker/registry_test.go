@@ -33,6 +33,14 @@ func TestRegistryGetNotPresent(t *testing.T) {
 
 type dummyChecker struct{}
 
+func (c *dummyChecker) Title() string {
+	return ""
+}
+
+func (c *dummyChecker) Description() string {
+	return ""
+}
+
 func (c *dummyChecker) Register(fc *FileChecker) {}
 
 func (c *dummyChecker) Check(node ast.Node, content string, report *Report) {}

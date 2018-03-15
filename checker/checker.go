@@ -26,6 +26,12 @@ type Report struct {
 // NodeChecker checks ast.Node values for violations.
 type NodeChecker interface {
 
+	// Title returns the title of the node checker.
+	Title() string
+
+	// Description returns the detailed description of the node checker.
+	Description() string
+
 	// Register registers the node checker for specific types
 	// of nodes in `fc`.
 	Register(fc *FileChecker)

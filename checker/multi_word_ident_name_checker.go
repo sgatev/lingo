@@ -21,6 +21,16 @@ func NewMultiWordIdentNameChecker(configData interface{}) NodeChecker {
 	return &MultiWordIdentNameChecker{}
 }
 
+// Title implements the NodeChecker interface.
+func (c *MultiWordIdentNameChecker) Title() string {
+	return "Multi-Word Identifiers"
+}
+
+// Description implements the NodeChecker interface.
+func (c *MultiWordIdentNameChecker) Description() string {
+	return `An identifier consisting of multiple words must be in camelCase form.`
+}
+
 // Register implements the NodeChecker interface.
 func (c *MultiWordIdentNameChecker) Register(fc *FileChecker) {
 	fc.On(&ast.Ident{}, c)

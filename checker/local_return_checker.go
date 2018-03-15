@@ -18,6 +18,16 @@ func NewLocalReturnChecker(configData interface{}) NodeChecker {
 	return &LocalReturnChecker{}
 }
 
+// Title implements the NodeChecker interface.
+func (c *LocalReturnChecker) Title() string {
+	return "Local Returns"
+}
+
+// Description implements the NodeChecker interface.
+func (c *LocalReturnChecker) Description() string {
+	return `An exported func must not return a type that is not exported.`
+}
+
 // Register implements the NodeChecker interface.
 func (c *LocalReturnChecker) Register(fc *FileChecker) {
 	fc.On(&ast.FuncDecl{}, c)
