@@ -187,7 +187,7 @@ const guideContent = `
 					"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 			}
 
-			h1 {
+			h1, h2 {
 				padding-bottom: 10px;
 				border-bottom: 1px solid #eaecef;
 			}
@@ -199,8 +199,12 @@ const guideContent = `
 				border: 1px solid #ddd;
 			}
 
+			.items {
+				margin-top: 50px;
+			}
+
 			.item:not(:last-child) {
-				border-bottom: 1px solid #eaecef;
+				padding-bottom: 30px;
 			}
 
 			.code {
@@ -212,20 +216,22 @@ const guideContent = `
 	<body>
 		<div class="page">
 			<h1>{{.Project}}'s lingo</h1>
-			{{range .Items}}
-			<div class="item">
-				<h2>{{.Title}}</h2>
-				<p>{{.Description}}</p>
+			<div class="items">
+				{{range .Items}}
+				<div class="item">
+					<h2>{{.Title}}</h2>
+					<p>{{.Description}}</p>
 
-				{{range .Examples}}
-				<h4>Bad</h4>
-				<div class="code">{{.Bad}}</div>
+					{{range .Examples}}
+					<h4>Bad</h4>
+					<div class="code">{{.Bad}}</div>
 
-				<h4>Good</h4>
-				<div class="code">{{.Good}}</div>
+					<h4>Good</h4>
+					<div class="code">{{.Good}}</div>
+					{{end}}
+				</div>
 				{{end}}
 			</div>
-			{{end}}
 		</div>
 	</body>
 </html>
