@@ -29,7 +29,7 @@ type Example struct {
 	// Good is an example of sticking to the rule.
 	Good string
 
-	// Bad is a counter-example that shows how to not apply the rule.
+	// Bad is a counter-example showing a mis-use which lingo will report.
 	Bad string
 }
 

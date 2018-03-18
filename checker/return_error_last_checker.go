@@ -20,12 +20,12 @@ func NewReturnErrorLastChecker(configData interface{}) NodeChecker {
 
 // Title implements the NodeChecker interface.
 func (c *ReturnErrorLastChecker) Title() string {
-	return "Error Return Last"
+	return "Return Error Last"
 }
 
 // Description implements the NodeChecker interface.
 func (c *ReturnErrorLastChecker) Description() string {
-	return `A function must return error as its last argument.`
+	return `When a function returns error it must be its last return value.`
 }
 
 // Examples implements the NodeChecker interface.

@@ -104,26 +104,9 @@ var Guide = &cobra.Command{
 		}
 		defer guide.Close()
 
-		code := `package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Hello World!")
-}
-`
-
-		var highlighted bytes.Buffer
-		err = quick.Highlight(&highlighted, code, "go", "html", "github")
-		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
-		}
-
 		data := map[string]interface{}{
 			"Project": project,
 			"Items":   items,
-			"Code":    highlighted.String(),
 		}
 
 		if err := guideTemplate.Execute(guide, data); err != nil {

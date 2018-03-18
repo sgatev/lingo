@@ -25,7 +25,7 @@ func (c *PassContextFirstChecker) Title() string {
 
 // Description implements the NodeChecker interface.
 func (c *PassContextFirstChecker) Description() string {
-	return `A function must receive context.Context as its first argument.`
+	return `When a function receives context.Context it must be its first argument.`
 }
 
 // Examples implements the NodeChecker interface.
