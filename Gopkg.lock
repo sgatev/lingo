@@ -130,24 +130,23 @@
   version = "v1.1.0"
 
 [[projects]]
-  branch = "master"
   name = "golang.org/x/tools"
   packages = [
     "go/ast/astutil",
     "go/buildutil",
     "go/loader"
   ]
-  revision = "9bd2f442688b66c5289262d70f537c2ecf81d7de"
+  revision = "96caea41033df6f8c3974c845ab094f8ec3bd345"
 
 [[projects]]
-  branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
+  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
+  version = "v2.1.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "14d2e86bdfdfebc2ce77227868626affc1bb11712c9e34537dcfc54b08cbc7fc"
+  inputs-digest = "d7ce447951456fb7ea95322d140b64c96e1ff607e576aab510861058efa3a828"
   solver-name = "gps-cdcl"
   solver-version = 1
