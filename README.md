@@ -56,12 +56,20 @@ checkers:
 
 [Here](doc/checkers.md) is a list of the available checkers.
 
-## Checking
+## Check
 
 To check all files rooted at the current directory for lingo violations execute:
 
 ```sh
 lingo check ./...
+```
+
+## Guide
+
+To read a guide with all the lingo rules applicable for the project execute:
+
+```sh
+lingo guide 
 ```
 
 ## Contributing

@@ -19,6 +19,34 @@ func NewTestPackageChecker(configData interface{}) NodeChecker {
 	return &TestPackageChecker{}
 }
 
+// Title implements the NodeChecker interface.
+func (c *TestPackageChecker) Title() string {
+	return "Test Package"
+}
+
+// Description implements the NodeChecker interface.
+func (c *TestPackageChecker) Description() string {
+	return `Tests must be defined in a separate package.`
+}
+
+// Examples implements the NodeChecker interface.
+func (c *TestPackageChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `package feature_test
+
+import "testing"
+
+func TestFeature(t *testing.T) {}`,
+			Bad: `package feature
+
+import "testing"
+
+func TestFeature(t *testing.T) {}`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *TestPackageChecker) Register(fc *FileChecker) {
 	fc.On(&ast.File{}, c)

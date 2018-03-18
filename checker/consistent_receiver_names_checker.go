@@ -25,6 +25,32 @@ func NewConsistentReceiverNamesChecker(configData interface{}) NodeChecker {
 	}
 }
 
+// Title implements the NodeChecker interface.
+func (c *ConsistentReceiverNamesChecker) Title() string {
+	return "Consistent Receiver Names"
+}
+
+// Description implements the NodeChecker interface.
+func (c *ConsistentReceiverNamesChecker) Description() string {
+	return `The names of the receivers of all methods of a type must be the same.`
+}
+
+// Examples implements the NodeChecker interface.
+func (c *ConsistentReceiverNamesChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `
+func (i *Executable) Execute() {}
+func (i *Executable) Cancel() {}
+`,
+			Bad: `
+func (i *Executable) Execute() {}
+func (t *Executable) Cancel() {}
+`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *ConsistentReceiverNamesChecker) Register(fc *FileChecker) {
 	fc.On(&ast.FuncDecl{}, c)

@@ -18,6 +18,26 @@ func NewReturnErrorLastChecker(configData interface{}) NodeChecker {
 	return &ReturnErrorLastChecker{}
 }
 
+// Title implements the NodeChecker interface.
+func (c *ReturnErrorLastChecker) Title() string {
+	return "Return Error Last"
+}
+
+// Description implements the NodeChecker interface.
+func (c *ReturnErrorLastChecker) Description() string {
+	return `When a function returns error it must be its last return value.`
+}
+
+// Examples implements the NodeChecker interface.
+func (c *ReturnErrorLastChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `func Create() (int, error) {}`,
+			Bad:  `func Create() (error, int) {}`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *ReturnErrorLastChecker) Register(fc *FileChecker) {
 	fc.On(&ast.FuncDecl{}, c)

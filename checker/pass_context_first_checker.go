@@ -18,6 +18,26 @@ func NewPassContextFirstChecker(configData interface{}) NodeChecker {
 	return &PassContextFirstChecker{}
 }
 
+// Title implements the NodeChecker interface.
+func (c *PassContextFirstChecker) Title() string {
+	return "Context Argument First"
+}
+
+// Description implements the NodeChecker interface.
+func (c *PassContextFirstChecker) Description() string {
+	return `When a function receives context.Context it must be its first argument.`
+}
+
+// Examples implements the NodeChecker interface.
+func (c *PassContextFirstChecker) Examples() []Example {
+	return []Example{
+		{
+			Good: `func Get(ctx context.Context, id string) {}`,
+			Bad:  `func Get(id string, ctx context.Context) {}`,
+		},
+	}
+}
+
 // Register implements the NodeChecker interface.
 func (c *PassContextFirstChecker) Register(fc *FileChecker) {
 	fc.On(&ast.FuncDecl{}, c)

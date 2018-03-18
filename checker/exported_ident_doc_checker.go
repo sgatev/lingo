@@ -39,6 +39,55 @@ func NewExportedIdentDocChecker(configData interface{}) NodeChecker {
 	}
 }
 
+// Title implements the NodeChecker interface.
+func (c *ExportedIdentDocChecker) Title() string {
+	return "Documented Exported Identifiers"
+}
+
+// Description implements the NodeChecker interface.
+func (c *ExportedIdentDocChecker) Description() string {
+	description := `Every exported identifier must be documented.`
+	if c.hasIdentPrefix {
+		description += ` The documentation string must begin with the name of ` +
+			`the identifier.`
+	}
+	return description
+}
+
+// Examples implements the NodeChecker interface.
+func (c *ExportedIdentDocChecker) Examples() []Example {
+	examples := []Example{
+		{
+			Good: `
+// Runner can run and stop.
+type Runner interface {
+
+    // Run runs the runner.
+    Run()
+
+    // Stop stops the runner.
+    Stop() error
+}
+
+// Runners are many runners.
+var Runners []Runner
+`,
+			Bad: `
+type Runner interface {
+
+    Run()
+
+    // This method is not documented properly.
+    Stop() error
+}
+
+var Runners []Runner
+`,
+		},
+	}
+	return examples
+}
+
 // Register implements the NodeChecker interface.
 func (c *ExportedIdentDocChecker) Register(fc *FileChecker) {
 	fc.On(&ast.GenDecl{}, c)
