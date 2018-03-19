@@ -13,6 +13,7 @@ import (
 	"github.com/alecthomas/chroma/quick"
 	"github.com/alecthomas/template"
 	"github.com/s2gatev/lingo/checker"
+	"github.com/s2gatev/lingo/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -31,22 +32,19 @@ var Guide = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		configData, err := ioutil.ReadFile(configFile)
 		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to read config file: %s", configFile)
 		}
 
 		var config Config
 		if err := yaml.Unmarshal(configData, &config); err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to parse config file: %s", configFile)
 		}
 
 		var checkers []checker.NodeChecker
 		for slug, config := range config.Checkers {
 			c := checker.Get(slug, config)
 			if c == nil {
-				// TODO: handle error gracefully
-				panic("unknown checker: " + slug)
+				cli.ExitError("unknown checker: %s", slug)
 			}
 
 			checkers = append(checkers, c)
@@ -54,8 +52,7 @@ var Guide = &cobra.Command{
 
 		configPath, err := filepath.Abs(configFile)
 		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to resolve config file: %s", configFile)
 		}
 
 		project := filepath.Base(filepath.Dir(configPath))
@@ -71,15 +68,13 @@ var Guide = &cobra.Command{
 				var good bytes.Buffer
 				err = quick.Highlight(&good, example.Good, "go", "html", "github")
 				if err != nil {
-					// TODO: handle error gracefully
-					panic(err)
+					cli.ExitError("failed to init example: %s", checker.Title())
 				}
 
 				var bad bytes.Buffer
 				err = quick.Highlight(&bad, example.Bad, "go", "html", "github")
 				if err != nil {
-					// TODO: handle error gracefully
-					panic(err)
+					cli.ExitError("failed to init example: %s", checker.Title())
 				}
 
 				item.Examples = append(item.Examples, guideItemExample{
@@ -93,14 +88,12 @@ var Guide = &cobra.Command{
 
 		dir, err := ioutil.TempDir("", "lingo")
 		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to create guide dir")
 		}
 
 		guide, err := os.Create(filepath.Join(dir, "guide.html"))
 		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to create guide file")
 		}
 		defer guide.Close()
 
@@ -110,11 +103,11 @@ var Guide = &cobra.Command{
 		}
 
 		if err := guideTemplate.Execute(guide, data); err != nil {
-			return
+			cli.ExitError("failed to initialize guide")
 		}
 
 		if err := openBrowser("file://" + guide.Name()); err != nil {
-			return
+			cli.ExitError("failed to open guide")
 		}
 	},
 }
