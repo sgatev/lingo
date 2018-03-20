@@ -5,11 +5,11 @@ import (
 	"go/parser"
 	"go/token"
 	"io/ioutil"
-	"os"
 
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/s2gatev/lingo/checker"
+	"github.com/s2gatev/lingo/cli"
 	"github.com/s2gatev/lingo/file"
 	"github.com/spf13/cobra"
 )
@@ -29,30 +29,25 @@ var Check = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		configData, err := ioutil.ReadFile(configFile)
 		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to read config file: %s", configFile)
 		}
 
 		var config Config
 		if err := yaml.Unmarshal(configData, &config); err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to parse config file: %s", configFile)
 		}
 
 		var matchers []file.Matcher
 		for _, matcher := range config.Matchers {
-			matchers = append(matchers,
-				file.Get(matcher.Type, matcher.Config))
+			matchers = append(matchers, file.Get(matcher.Type, matcher.Config))
 		}
-
 		feeder := file.NewFeeder(matchers...)
 
 		fc := checker.NewFileChecker()
 		for slug, config := range config.Checkers {
 			c := checker.Get(slug, config)
 			if c == nil {
-				// TODO: handle error gracefully
-				panic("unknown checker: " + slug)
+				cli.ExitError("unknown checker: %s", slug)
 			}
 
 			fc.Register(c)
@@ -60,8 +55,7 @@ var Check = &cobra.Command{
 
 		files, err := feeder.Feed(args[0])
 		if err != nil {
-			// TODO: handle error gracefully
-			panic(err)
+			cli.ExitError("failed to process files: %s", args[0])
 		}
 
 		reports := map[string]*checker.Report{}
@@ -82,8 +76,7 @@ var Check = &cobra.Command{
 				nil,
 				parser.ParseComments)
 			if err != nil {
-				// TODO: handle error gracefully
-				panic(err)
+				cli.ExitError("failed to parse file: %s", path)
 			}
 
 			fc.Check(file, string(content), reports[path])
@@ -104,11 +97,13 @@ var Check = &cobra.Command{
 
 			totalErrors += len(report.Errors)
 		}
-		fmt.Printf("%d violations found in %d files\n",
-			totalErrors, len(reports))
 
 		if totalErrors > 0 {
-			os.Exit(1)
+			cli.ExitError("%d violations found in %d files",
+				totalErrors, len(reports))
+		} else {
+			cli.ExitOK("%d violations found in %d files",
+				totalErrors, len(reports))
 		}
 	},
 }
