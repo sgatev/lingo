@@ -1,6 +1,7 @@
 package checker_test
 
 import (
+	"go/token"
 	"testing"
 
 	. "github.com/s2gatev/lingo/checker"
@@ -25,7 +26,7 @@ func TestLineLengthChecker(t *testing.T) {
 			expected: Report{
 				Errors: []Error{
 					{
-						Pos:     11,
+						Pos:     19,
 						Message: "line is too long",
 					},
 				},
@@ -41,10 +42,12 @@ func TestLineLengthChecker(t *testing.T) {
 				TabWidth:  4,
 			}))
 
-			file := ParseFileContent(test.input)
+			fileSet := token.NewFileSet()
+			file := ParseFileContentInSet(fileSet, test.input)
 			var report Report
 			checker.Check(file, test.input, &report)
 			assert.Equal(t, test.expected, report)
+			assert.Equal(t, 4, fileSet.Position(report.Errors[0].Pos).Line)
 		})
 	}
 }
