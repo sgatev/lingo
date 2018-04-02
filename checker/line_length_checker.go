@@ -1,6 +1,7 @@
 package checker
 
 import (
+	"bufio"
 	"fmt"
 	"go/ast"
 	"go/token"
@@ -70,11 +71,13 @@ func (c *LineLengthChecker) Check(
 
 	tabAsSpaces := strings.Repeat(" ", c.tabWidth)
 
-	pos := 0
-	lines := strings.Split(content, "\n")
-	for _, line := range lines {
-		line = strings.Replace(line, "\t", tabAsSpaces, -1)
+	pos := int(node.Pos())
+	scanner := bufio.NewScanner(strings.NewReader(content))
+	for scanner.Scan() {
+		line := scanner.Text()
+		length := len(line) + 1
 
+		line = strings.Replace(line, "\t", tabAsSpaces, -1)
 		if len(line) > c.maxLength {
 			report.Errors = append(report.Errors, Error{
 				Pos:     token.Pos(pos),
@@ -82,6 +85,6 @@ func (c *LineLengthChecker) Check(
 			})
 		}
 
-		pos += len(line)
+		pos += length
 	}
 }
