@@ -29,3 +29,5 @@ checkers:
     max_length: 90
     tab_width: 4
   left_quantifiers:
+  func_cyclo:
+    max: 10
