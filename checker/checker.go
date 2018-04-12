@@ -141,6 +141,7 @@ func (c *FileChecker) visitFuncDecl(decl *ast.FuncDecl, report *Report) {
 	c.emit(decl, "", report)
 
 	c.visitIdent(decl.Name, report)
+	c.visitFuncType(decl.Type, report)
 
 	for _, stmt := range decl.Body.List {
 		switch stmt := stmt.(type) {
@@ -194,6 +195,8 @@ func (c *FileChecker) visitBinaryExpr(expr *ast.BinaryExpr, report *Report) {
 }
 
 func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {
+	c.visitFuncType(lit.Type, report)
+
 	for _, stmt := range lit.Body.List {
 		switch stmt := stmt.(type) {
 		case *ast.DeclStmt:
