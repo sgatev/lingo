@@ -142,15 +142,7 @@ func (c *FileChecker) visitFuncDecl(decl *ast.FuncDecl, report *Report) {
 
 	c.visitIdent(decl.Name, report)
 	c.visitFuncType(decl.Type, report)
-
-	for _, stmt := range decl.Body.List {
-		switch stmt := stmt.(type) {
-		case *ast.DeclStmt:
-			c.visitDeclStmt(stmt, report)
-		case *ast.AssignStmt:
-			c.visitAssignStmt(stmt, report)
-		}
-	}
+	c.visitBlockStmt(decl.Body, report)
 }
 
 func (c *FileChecker) visitDeclStmt(stmt *ast.DeclStmt, report *Report) {
@@ -167,6 +159,12 @@ func (c *FileChecker) visitAssignStmt(stmt *ast.AssignStmt, report *Report) {
 	}
 }
 
+func (c *FileChecker) visitRangeStmt(stmt *ast.RangeStmt, report *Report) {
+	c.emit(stmt, "", report)
+
+	c.visitBlockStmt(stmt.Body, report)
+}
+
 func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 	switch expr := expr.(type) {
 	case *ast.Ident:
@@ -181,7 +179,13 @@ func (c *FileChecker) visitExpr(expr ast.Expr, report *Report) {
 		c.visitInterfaceType(expr, report)
 	case *ast.FuncType:
 		c.visitFuncType(expr, report)
+	case *ast.CallExpr:
+		c.visitCallExpr(expr, report)
 	}
+}
+
+func (c *FileChecker) visitCallExpr(expr *ast.CallExpr, report *Report) {
+	c.visitExpr(expr.Fun, report)
 }
 
 func (c *FileChecker) visitIdent(ident *ast.Ident, report *Report) {
@@ -196,15 +200,32 @@ func (c *FileChecker) visitBinaryExpr(expr *ast.BinaryExpr, report *Report) {
 
 func (c *FileChecker) visitFuncLit(lit *ast.FuncLit, report *Report) {
 	c.visitFuncType(lit.Type, report)
+	c.visitBlockStmt(lit.Body, report)
+}
 
-	for _, stmt := range lit.Body.List {
+func (c *FileChecker) visitBlockStmt(stmt *ast.BlockStmt, report *Report) {
+	for _, stmt := range stmt.List {
 		switch stmt := stmt.(type) {
 		case *ast.DeclStmt:
 			c.visitDeclStmt(stmt, report)
 		case *ast.AssignStmt:
 			c.visitAssignStmt(stmt, report)
+		case *ast.RangeStmt:
+			c.visitRangeStmt(stmt, report)
+		case *ast.ExprStmt:
+			c.visitExprStmt(stmt, report)
+		case *ast.GoStmt:
+			c.visitGoStmt(stmt, report)
 		}
 	}
+}
+
+func (c *FileChecker) visitGoStmt(stmt *ast.GoStmt, report *Report) {
+	c.visitCallExpr(stmt.Call, report)
+}
+
+func (c *FileChecker) visitExprStmt(stmt *ast.ExprStmt, report *Report) {
+	c.visitExpr(stmt.X, report)
 }
 
 func (c *FileChecker) visitStructType(typ *ast.StructType, report *Report) {

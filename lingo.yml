@@ -32,3 +32,4 @@ checkers:
   func_cyclo:
     max: 15
   group_param_types:
+  bad_range_reference:
