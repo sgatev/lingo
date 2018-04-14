@@ -15,7 +15,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 		expected    Report
 	}{
 		{
-			description: "no parameters",
+			description: "func, no params",
 			input: `
 				package test
 
@@ -24,7 +24,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "single parameter",
+			description: "func, single param",
 			input: `
 				package test
 
@@ -33,7 +33,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "ellipsis parameter",
+			description: "func, ellipsis param",
 			input: `
 				package test
 
@@ -42,7 +42,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "different param types",
+			description: "func, different params, simple types",
 			input: `
 				package test
 
@@ -51,7 +51,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "same param types, grouped",
+			description: "func, same params, simple types, grouped",
 			input: `
 				package test
 
@@ -60,7 +60,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "same simple param types, not grouped",
+			description: "func, same params, simple types, not grouped",
 			input: `
 				package test
 
@@ -76,7 +76,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "method, same simple param types, not grouped",
+			description: "method, same params, simple types, not grouped",
 			input: `
 				package test
 
@@ -92,7 +92,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "same pointer param types, not grouped",
+			description: "func, same params, pointer types, not grouped",
 			input: `
 				package test
 
@@ -108,7 +108,64 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "same type param types, not grouped",
+			description: "func, different params, array types",
+			input: `
+				package test
+
+				func foo(a [3]int, b [5]int) {}
+			`,
+			expected: Report{},
+		},
+		{
+			description: "func, same params, array types, not grouped",
+			input: `
+				package test
+
+				func foo(a [3]int, b [3]int) {}
+			`,
+			expected: Report{
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: `params should be grouped by type`,
+					},
+				},
+			},
+		},
+		{
+			description: "func, same params, slice types, not grouped",
+			input: `
+				package test
+
+				func foo(a []int, b []int) {}
+			`,
+			expected: Report{
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: `params should be grouped by type`,
+					},
+				},
+			},
+		},
+		{
+			description: "func, same params, map types, not grouped",
+			input: `
+				package test
+
+				func foo(a map[string]int, b map[string]int) {}
+			`,
+			expected: Report{
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: `params should be grouped by type`,
+					},
+				},
+			},
+		},
+		{
+			description: "func, same params, custom types, not grouped",
 			input: `
 				package test
 
@@ -124,7 +181,32 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "same type chan types, not grouped",
+			description: "func, same params, func types, not grouped",
+			input: `
+				package test
+
+				func foo(a func() int, b func() int) {}
+			`,
+			expected: Report{
+				Errors: []Error{
+					{
+						Pos:     24,
+						Message: `params should be grouped by type`,
+					},
+				},
+			},
+		},
+		{
+			description: "func, different params, func types",
+			input: `
+				package test
+
+				func foo(a func() int, b func() string) {}
+			`,
+			expected: Report{},
+		},
+		{
+			description: "func, same params, chan types, not grouped",
 			input: `
 				package test
 
@@ -140,7 +222,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			},
 		},
 		{
-			description: "same type in-chan types, grouped",
+			description: "func, different params, in-chan type",
 			input: `
 				package test
 
@@ -149,7 +231,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "same type out-chan types, grouped",
+			description: "func, different params, out-chan types",
 			input: `
 				package test
 
@@ -158,7 +240,7 @@ func TestGroupParamTypesChecker(t *testing.T) {
 			expected: Report{},
 		},
 		{
-			description: "same param types, separated by different one",
+			description: "func, same param types, separated by different one",
 			input: `
 				package test
 
