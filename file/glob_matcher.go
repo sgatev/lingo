@@ -1,7 +1,7 @@
 package file
 
 import (
-	zglob "github.com/mattn/go-zglob"
+	"github.com/mattn/go-zglob"
 	"github.com/uber-go/mapdecode"
 )
 
