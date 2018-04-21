@@ -19,7 +19,7 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 			input: `
 				package test
 
-				import "foo"
+				import "math/rand"
 			`,
 			expected: Report{},
 		},
@@ -28,7 +28,7 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 			input: `
 				package test
 
-				import . "foo"
+				import . "math/rand"
 			`,
 			expected: Report{},
 		},
@@ -37,7 +37,7 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 			input: `
 				package test
 
-				import _ "foo"
+				import _ "math/rand"
 			`,
 			expected: Report{},
 		},
@@ -46,7 +46,7 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 			input: `
 				package test
 
-				import something "foo"
+				import something "math/rand"
 			`,
 			expected: Report{
 				Errors: []Error{
@@ -63,8 +63,8 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 				package test
 
 				import (
-					"bar"
-					. "foo/bar"
+					"math/rand"
+					. "crypto/rand"
 				)
 			`,
 			expected: Report{},
@@ -75,8 +75,8 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 				package test
 
 				import (
-					"bar"
-					_ "foo/bar"
+					"math/rand"
+					_ "crypto/rand"
 				)
 			`,
 			expected: Report{},
@@ -87,8 +87,8 @@ func TestUnneededImportAliasChecker(t *testing.T) {
 				package test
 
 				import (
-					"bar"
-					something "foo/bar"
+					"math/rand"
+					something "crypto/rand"
 				)
 			`,
 			expected: Report{},

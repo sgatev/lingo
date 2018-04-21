@@ -3,7 +3,7 @@ package checker
 import (
 	"fmt"
 	"go/ast"
-	"path"
+	"go/importer"
 	"strings"
 )
 
@@ -13,11 +13,15 @@ func init() {
 
 // UnneededImportAliasChecker checks that import aliases are used only when
 // necessary.
-type UnneededImportAliasChecker struct{}
+type UnneededImportAliasChecker struct {
+	packageNames map[string]string
+}
 
 // NewUnneededImportAliasChecker constructs a UnneededImportAliasChecker.
 func NewUnneededImportAliasChecker(configData interface{}) NodeChecker {
-	return &UnneededImportAliasChecker{}
+	return &UnneededImportAliasChecker{
+		packageNames: map[string]string{},
+	}
 }
 
 // Title implements the NodeChecker interface.
@@ -69,7 +73,12 @@ func (c *UnneededImportAliasChecker) Check(
 			continue
 		}
 
-		packageNames[extractPackageName(importSpec)] = struct{}{}
+		packageName, err := c.extractPackageName(importSpec)
+		if err != nil {
+			continue
+		}
+
+		packageNames[packageName] = struct{}{}
 	}
 
 	for _, importSpec := range file.Imports {
@@ -82,7 +91,11 @@ func (c *UnneededImportAliasChecker) Check(
 			continue
 		}
 
-		packageName := extractPackageName(importSpec)
+		packageName, err := c.extractPackageName(importSpec)
+		if err != nil {
+			continue
+		}
+
 		if _, ok := packageNames[packageName]; ok {
 			continue
 		}
@@ -94,10 +107,24 @@ func (c *UnneededImportAliasChecker) Check(
 	}
 }
 
-func hasAlias(importSpec *ast.ImportSpec) bool {
-	return importSpec.Name != nil
+func (c *UnneededImportAliasChecker) extractPackageName(
+	importSpec *ast.ImportSpec) (string, error) {
+
+	importPath := strings.Trim(importSpec.Path.Value, `"`)
+	packageName, ok := c.packageNames[importPath]
+	if !ok {
+		pkg, err := importer.Default().Import(importPath)
+		if err != nil {
+			return "", err
+		}
+
+		packageName = pkg.Name()
+		c.packageNames[importPath] = packageName
+	}
+
+	return packageName, nil
 }
 
-func extractPackageName(importSpec *ast.ImportSpec) string {
-	return path.Base(strings.Trim(importSpec.Path.Value, `"`))
+func hasAlias(importSpec *ast.ImportSpec) bool {
+	return importSpec.Name != nil
 }
