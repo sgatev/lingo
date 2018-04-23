@@ -33,3 +33,4 @@ checkers:
     max: 15
   group_param_types:
   bad_range_reference:
+  unneeded_import_alias:

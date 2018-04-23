@@ -6,12 +6,11 @@ import (
 	"go/token"
 	"io/ioutil"
 
-	yaml "gopkg.in/yaml.v2"
-
 	"github.com/s2gatev/lingo/checker"
 	"github.com/s2gatev/lingo/cli"
 	"github.com/s2gatev/lingo/file"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
 func init() {
