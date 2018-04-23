@@ -34,3 +34,5 @@ checkers:
   group_param_types:
   bad_range_reference:
   unneeded_import_alias:
+  func_params_count:
+    max: 3
