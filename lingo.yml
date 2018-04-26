@@ -36,3 +36,5 @@ checkers:
   unneeded_import_alias:
   func_params_count:
     max: 3
+  func_results_count:
+    max: 2
