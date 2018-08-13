@@ -37,3 +37,4 @@ checkers:
     max: 3
   func_results_count:
     max: 2
+  redundant_else:
