@@ -28,7 +28,6 @@ checkers:
   line_length:
     max_length: 90
     tab_width: 4
-  left_quantifiers:
   func_cyclo:
     max: 15
   group_param_types:
@@ -38,3 +37,4 @@ checkers:
     max: 3
   func_results_count:
     max: 2
+  redundant_else:

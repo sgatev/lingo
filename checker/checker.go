@@ -216,6 +216,10 @@ func (c *FileChecker) visitBlockStmt(stmt *ast.BlockStmt, report *Report) {
 			c.visitExprStmt(stmt, report)
 		case *ast.GoStmt:
 			c.visitGoStmt(stmt, report)
+		case *ast.IfStmt:
+			c.visitIfStmt(stmt, report)
+		case *ast.ForStmt:
+			c.visitForStmt(stmt, report)
 		}
 	}
 }
@@ -259,4 +263,12 @@ func (c *FileChecker) visitField(field *ast.Field, report *Report) {
 	}
 
 	c.visitExpr(field.Type, report)
+}
+
+func (c *FileChecker) visitIfStmt(stmt *ast.IfStmt, report *Report) {
+	c.emit(stmt, "", report)
+}
+
+func (c *FileChecker) visitForStmt(stmt *ast.ForStmt, report *Report) {
+	c.visitBlockStmt(stmt.Body, report)
 }
